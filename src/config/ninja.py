@@ -1,6 +1,7 @@
 from ninja import NinjaAPI
 
 from bms.views import bms_router
+from config.routers import bms_options_router
 
 api = NinjaAPI(
     title="NinjaAPI",
@@ -11,3 +12,4 @@ api = NinjaAPI(
 
 
 api.add_router("/", bms_router)
+api.add_router("/options/", bms_options_router)

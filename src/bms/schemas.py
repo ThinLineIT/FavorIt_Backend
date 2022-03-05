@@ -56,3 +56,8 @@ class BookInfo(Schema):
     price: int
     sale_price: int
     purchased_at: date
+
+
+class OptionListResponse(Schema):
+    text: str
+    value: str

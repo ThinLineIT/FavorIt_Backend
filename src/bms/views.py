@@ -1,12 +1,15 @@
 from http import HTTPStatus
 
-from ninja import Router
-
 from bms.constants import MSG_BOOK_CREATED
+from bms.enums import BookType
 from bms.handlers import handle_create_book, handle_retrieve_books
-from bms.schemas import BookInfo, CreateBookRequestBody, CreateBookResponse
-
-bms_router = Router(tags=["BMS"])
+from bms.schemas import (
+    BookInfo,
+    CreateBookRequestBody,
+    CreateBookResponse,
+    OptionListResponse,
+)
+from config.routers import bms_options_router, bms_router
 
 
 @bms_router.get(
@@ -19,6 +22,18 @@ bms_router = Router(tags=["BMS"])
 )
 def retrieve_books(request):
     return HTTPStatus.OK, handle_retrieve_books()
+
+
+@bms_options_router.get(
+    path="/book-types",
+    url_name="book_types_option_list",
+    summary="책의 타입 옵션 리스트",
+    description="책 타입의 옵션 리스트를 보여줍니다",
+    response={200: list[OptionListResponse]},
+    auth=None,
+)
+def retrieve_book_types_option_list(request):
+    return HTTPStatus.OK, BookType.as_options()
 
 
 @bms_router.post(
