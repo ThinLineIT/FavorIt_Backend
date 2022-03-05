@@ -13,6 +13,13 @@ def hello(request):
     return {"hello": "hello", "world": "world"}
 
 
-@bms_router.post(path="/book", url_name="create_book", summary="Create Book", response=CreateBookResponse, auth=None)
+@bms_router.post(
+    path="/book",
+    url_name="create_book",
+    summary="책 생성",
+    description="책을 생성 합니다",
+    response={201: CreateBookResponse},
+    auth=None,
+)
 def create_book(request, request_body: CreateBookRequestBody):
-    return handle_create_book(name=request_body.name)
+    return handle_create_book(request_body)
