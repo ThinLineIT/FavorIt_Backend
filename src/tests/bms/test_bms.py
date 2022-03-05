@@ -12,7 +12,7 @@ client = Client()
 
 
 class TestCreateBook:
-    @pytest.mark.django_db
+    @pytest.mark.django_db(transaction=True)
     def test_create_book(self):
 
         author = Author.objects.create(name="Kent Beck")
@@ -28,12 +28,18 @@ class TestCreateBook:
             "purchased_at": timezone.localdate(),
         }
 
-        response = client.post(
-            path=reverse("ninja:create_book"), data=valid_request_body, content_type="application/json"
-        )
+        response = client.post(path=reverse("bms:books"), data=valid_request_body, content_type="application/json")
 
         assert response.status_code == HTTPStatus.CREATED
         assert Book.objects.count() == 1
         book = Book.objects.all()[0]
         assert book.author.id == valid_request_body["author_id"]
         assert book.name == valid_request_body["name"]
+
+
+class TestRetrieveBooks:
+    @pytest.mark.django_db(transaction=True)
+    def test_retrieve_books(self):
+        response = client.get(path=reverse("bms:books"), content_type="application/json")
+
+        assert response.status_code == HTTPStatus.OK

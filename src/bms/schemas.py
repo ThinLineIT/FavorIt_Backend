@@ -40,6 +40,19 @@ class CreateBookRequestBody(Schema):
                 "published_at": "2022-03-05",
                 "price": 13000,
                 "sale_price": 10000,
-                "published_at": "2022-03-05",
+                "purchased_at": "2022-03-05",
             }
         }
+
+
+class BookInfo(Schema):
+    id: int
+    author: str
+    name: str
+    sub_name: str
+    type: BookType
+    description: str
+    published_at: date
+    price: int
+    sale_price: int
+    purchased_at: date

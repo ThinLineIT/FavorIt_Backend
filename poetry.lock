@@ -539,7 +539,7 @@ python-versions = "*"
 name = "mypy"
 version = "0.931"
 description = "Optional static typing for Python"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -556,7 +556,7 @@ python2 = ["typed-ast (>=1.4.0,<2)"]
 name = "mypy-extensions"
 version = "0.4.3"
 description = "Experimental type system extensions for programs checked with the mypy typechecker."
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -911,7 +911,7 @@ python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 name = "tomli"
 version = "1.2.3"
 description = "A lil' TOML parser"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -1046,7 +1046,7 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "1.1"
 python-versions = "3.10"
-content-hash = "253f40d03fc63b96b66e7cce19f5c63c9437fefb4c3a3af0179612ed813d3995"
+content-hash = "cfe042fab1a12bf39fac9ba99460bd40eb5e3aa259b289ac78223728e6aa4298"
 
 [metadata.files]
 anyio = [
