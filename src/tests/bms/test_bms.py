@@ -11,13 +11,6 @@ from bms.models import Author, Book
 client = Client()
 
 
-def test_hello():
-    response = client.get(path=reverse("ninja:hello_world"))
-    result = response.json()
-    assert result["hello"] == "hello"
-    assert result["world"] == "world"
-
-
 class TestCreateBook:
     @pytest.mark.django_db
     def test_create_book(self):

@@ -1,16 +1,9 @@
 from ninja import Router
 
 from bms.handlers import handle_create_book
-from bms.schemas import CreateBookRequestBody, CreateBookResponse, HelloWorldOut
+from bms.schemas import CreateBookRequestBody, CreateBookResponse
 
 bms_router = Router(tags=["BMS"])
-
-
-@bms_router.get(
-    path="/hello", url_name="hello_world", summary="hello world!!12312312", response=HelloWorldOut, auth=None
-)
-def hello(request):
-    return {"hello": "hello", "world": "world"}
 
 
 @bms_router.post(
