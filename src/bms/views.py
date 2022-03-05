@@ -1,5 +1,6 @@
 from ninja import Router
 
+from bms.constants import MSG_BOOK_CREATED
 from bms.handlers import handle_create_book
 from bms.schemas import CreateBookRequestBody, CreateBookResponse
 
@@ -15,4 +16,5 @@ bms_router = Router(tags=["BMS"])
     auth=None,
 )
 def create_book(request, request_body: CreateBookRequestBody):
-    return handle_create_book(request_body)
+    handle_create_book(request_body)
+    return CreateBookResponse(message=MSG_BOOK_CREATED)
