@@ -2,14 +2,7 @@ from django.db import models
 
 from bms.book.enums import BookType
 from bms.book.querysets import BookQuerySet
-
-
-class CommonTimestamp(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
+from bms.common.models import CommonTimestamp
 
 
 class Author(CommonTimestamp):
