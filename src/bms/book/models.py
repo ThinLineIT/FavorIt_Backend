@@ -1,6 +1,7 @@
 from django.db import models
 
-from bms.enums import BookType
+from bms.book.enums import BookType
+from bms.book.querysets import BookQuerySet
 
 
 class CommonTimestamp(models.Model):
@@ -29,6 +30,8 @@ class Book(CommonTimestamp):
     tags = models.ManyToManyField("Tag")
     purchased_at = models.DateField(null=True)
     published_at = models.DateField(null=True)
+
+    objects = BookQuerySet.as_manager()
 
     def __str__(self):
         return self.name

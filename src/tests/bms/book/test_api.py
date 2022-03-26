@@ -5,8 +5,8 @@ from django.test.client import Client
 from django.urls import reverse
 from django.utils import timezone
 
-from bms.enums import BookType
-from bms.models import Author, Book
+from bms.book.enums import BookType
+from bms.book.models import Author, Book
 
 client = Client()
 
@@ -28,7 +28,7 @@ class TestCreateBook:
             "purchased_at": timezone.localdate(),
         }
 
-        response = client.post(path=reverse("bms:books"), data=valid_request_body, content_type="application/json")
+        response = client.post(path=reverse("ninja:books"), data=valid_request_body, content_type="application/json")
 
         assert response.status_code == HTTPStatus.CREATED
         assert Book.objects.count() == 1
@@ -55,7 +55,7 @@ class TestRetrieveBooks:
             }
         )
 
-        response = client.get(path=reverse("bms:books"), content_type="application/json")
+        response = client.get(path=reverse("ninja:books"), content_type="application/json")
 
         assert response.status_code == HTTPStatus.OK
         result = response.json()
@@ -68,7 +68,7 @@ class TestRetrieveBooks:
 
 class TestBookTypesOptionList:
     def test_retrieve_book_types_option_list(self):
-        response = client.get(path=reverse("bms:book_types_option_list"), content_type="application/json")
+        response = client.get(path=reverse("ninja:book_types_option_list"), content_type="application/json")
 
         assert response.status_code == HTTPStatus.OK
         assert response.json() == [

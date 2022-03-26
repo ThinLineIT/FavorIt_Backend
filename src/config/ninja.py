@@ -1,7 +1,6 @@
 from ninja import NinjaAPI
 
-from bms.views import bms_router
-from config.routers import bms_options_router
+from bms.book.api import bms_options_router, bms_router
 
 api = NinjaAPI(
     title="NinjaAPI",
