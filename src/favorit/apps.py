@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class BmsConfig(AppConfig):
+class FavorItConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "bms"
+    name = "favorit"

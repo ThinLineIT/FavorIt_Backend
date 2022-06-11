@@ -3,10 +3,10 @@ from http import HTTPStatus
 from ninja import Path, Router
 from ninja.errors import HttpError
 
-from bms.book.constants import MSG_BOOK_CREATED
-from bms.book.enums import BookType
-from bms.book.models import Book
-from bms.book.schemas import (
+from favorit.funding.constants import MSG_BOOK_CREATED
+from favorit.funding.enums import BookType
+from favorit.funding.models import Book
+from favorit.funding.schemas import (
     BookInfoResponse,
     CreateBookRequestBody,
     CreateBookResponse,
