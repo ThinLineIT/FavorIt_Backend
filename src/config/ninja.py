@@ -1,14 +1,13 @@
 from ninja import NinjaAPI
 
-from favorit.funding.api import bms_options_router, bms_router
+from favorit.funding.api import funding_router
 
 api = NinjaAPI(
-    title="NinjaAPI",
+    title="FavorIt API",
     version="1.0.0",
-    description="집에 있는 책을 관리하는 시스템 API 입니다",
+    description="FavorIt API 입니다.",
     urls_namespace="favorit",
 )
 
 
-api.add_router("/", bms_router)
-api.add_router("/options/", bms_options_router)
+api.add_router("/", funding_router)
