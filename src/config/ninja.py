@@ -1,5 +1,6 @@
 from ninja import NinjaAPI
 
+from favorit.favorit_user.api import auth_router
 from favorit.funding.api import funding_router
 
 api = NinjaAPI(
@@ -9,5 +10,5 @@ api = NinjaAPI(
     urls_namespace="favorit",
 )
 
-
+api.add_router("/auth", auth_router)
 api.add_router("/", funding_router)

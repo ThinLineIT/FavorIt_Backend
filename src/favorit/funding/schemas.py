@@ -39,5 +39,5 @@ class CreateFundingResponse(CommonResponse):
     data: dict[str, Any]
 
 
-class CreateFunding400Response(CommonErrorResponse):
+class CreateFunding400ErrorResponse(CommonErrorResponse):
     detail: str = Field(default="fail creating funding")
