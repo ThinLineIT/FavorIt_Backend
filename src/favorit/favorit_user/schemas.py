@@ -2,7 +2,7 @@ from typing import Any
 
 from ninja import Field, Schema
 
-from favorit.common.schemas import CommonResponse
+from favorit.common.schemas import CommonErrorResponse, CommonResponse
 
 
 class LoginRequest(Schema):
@@ -19,5 +19,5 @@ class LoginResponse(CommonResponse):
         schema_extra = {"example": {"access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3..."}}
 
 
-class Login401ErrorResponse(Schema):
+class Login401ErrorResponse(CommonErrorResponse):
     detail: str
