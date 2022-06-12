@@ -1,5 +1,6 @@
 import pytest
 
+from favorit.funding.models import Product
 from favorit.funding.schemas import CreateFundingRequestBody
 from favorit.funding.services import FundingCreator
 
@@ -21,3 +22,4 @@ class TestFundingCreator:
         request_body = CreateFundingRequestBody(**valid_request_body)
         funding_creator = FundingCreator(request_body=request_body)
         assert funding_creator.create().id == 1
+        assert Product.objects.count() == 1
