@@ -8,7 +8,7 @@ from favorit.common.schemas import CommonErrorResponse, CommonResponse
 
 class Product(Schema):
     link: str = Field(description="제품 링크")
-    options: list[str] = Field(description="제품 옵션")
+    option: str = Field(description="제품 옵션")
     price: int = Field(description="제품 가격")
 
 

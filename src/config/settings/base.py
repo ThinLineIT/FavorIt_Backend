@@ -12,7 +12,7 @@ SECRET_KEY = env("SECRET_KEY")
 
 ALLOWED_HOSTS = ["*"]
 
-APPS = ["favorit.funding"]
+APPS = ["favorit"]
 THIRD_PARTIES = ["django_extensions"]
 INSTALLED_APPS = (
     [
