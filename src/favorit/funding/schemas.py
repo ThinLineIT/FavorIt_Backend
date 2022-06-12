@@ -27,7 +27,7 @@ class CreateFundingRequestBody(Schema):
                 "due_date": "2022-09-03",
                 "product": {
                     "link": "https://www.apple.com/kr/shop/buy-ipad/ipad-air",
-                    "options": ["스그", "64GB", "Wi-Fi"],
+                    "option": "WIFI에 색상은 금색 256GB",
                     "price": 779000,
                 },
                 "recipient_name": "신윤권",
