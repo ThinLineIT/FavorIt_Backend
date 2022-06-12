@@ -1,3 +1,6 @@
+from http import HTTPStatus
+
+from ninja.errors import HttpError
 from ninja_jwt.tokens import RefreshToken
 
 from favorit.favorit_user.models import FavorItUser
@@ -8,6 +11,9 @@ from favorit.integration.kakao.user_info_fetcher import KakaoUserInfoFetcher
 def handle_login(request_body: LoginRequest) -> dict[str, str]:
     kakao_user_info_fetcher = KakaoUserInfoFetcher()
     kakao_user_info = kakao_user_info_fetcher.fetch(token=request_body.kakao_token)
+
+    if kakao_user_info.get("id") is None:
+        raise HttpError(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, message="카카오 유저 정보를 읽어오는데 실패 하였습니다")
 
     favorit_user, _ = FavorItUser.objects.get_or_create(kakao_user_id=kakao_user_info["id"])
 
