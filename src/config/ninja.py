@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from ninja.errors import ValidationError
+from ninja.errors import HttpError, ValidationError
 from ninja.responses import Response
 from ninja_extra import NinjaExtraAPI
 
@@ -18,6 +18,13 @@ api = NinjaExtraAPI(
 @api.exception_handler(ValidationError)
 def validation_errors(request, exc):
     return Response(data={"detail": exc.errors[0]["msg"], "message": ""}, status=HTTPStatus.BAD_REQUEST)
+
+
+@api.exception_handler(HttpError)
+def http_errors(request, exc):
+    if exc.status_code == HTTPStatus.UNAUTHORIZED:
+        return Response(data={"detail": str(exc), "message": ""}, status=HTTPStatus.UNAUTHORIZED)
+    return Response(data={"detail": str(exc), "message": ""}, status=exc.status_code)
 
 
 api.add_router("/auth", auth_router)
