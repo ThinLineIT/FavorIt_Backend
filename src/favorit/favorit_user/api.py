@@ -2,6 +2,7 @@ from http import HTTPStatus
 
 from ninja import Router
 
+from favorit.favorit_user.handlers import handle_login
 from favorit.favorit_user.schemas import (
     Login401ErrorResponse,
     LoginRequest,
@@ -20,4 +21,4 @@ auth_router = Router(tags=["Auth"])
     auth=None,
 )
 def login(request, request_body: LoginRequest):
-    return HTTPStatus.OK, LoginResponse(data={"access_token": "test_access_token"})
+    return HTTPStatus.OK, LoginResponse(data=handle_login(request_body))

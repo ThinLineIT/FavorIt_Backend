@@ -1,13 +1,13 @@
 from http import HTTPStatus
 
-from ninja import NinjaAPI
 from ninja.errors import ValidationError
 from ninja.responses import Response
+from ninja_extra import NinjaExtraAPI
 
 from favorit.favorit_user.api import auth_router
 from favorit.funding.api import funding_router
 
-api = NinjaAPI(
+api = NinjaExtraAPI(
     title="FavorIt API",
     version="1.0.0",
     description="FavorIt API 입니다.",

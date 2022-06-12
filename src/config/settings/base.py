@@ -13,7 +13,7 @@ SECRET_KEY = env("SECRET_KEY")
 ALLOWED_HOSTS = ["*"]
 
 APPS = ["favorit"]
-THIRD_PARTIES = ["django_extensions"]
+THIRD_PARTIES = ["django_extensions", "ninja_jwt"]
 INSTALLED_APPS = (
     [
         "django.contrib.admin",

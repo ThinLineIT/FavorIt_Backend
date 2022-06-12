@@ -25,6 +25,9 @@ freezegun = "^1.1.0"
 types-freezegun = "^1.1.2"
 mysqlclient = "^2.1.0"
 mypy = "^0.931"
+cryptography = "^37.0.2"
+django-ninja-jwt = "^5.2.0"
+requests = "^2.28.0"
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^2.11.1"
