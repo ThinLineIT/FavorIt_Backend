@@ -16,7 +16,12 @@ class LoginResponse(CommonResponse):
     data: dict[str, Any] = Field(description="API 사용을 위한 access token - JWT")
 
     class Config:
-        schema_extra = {"example": {"access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3..."}}
+        schema_extra = {
+            "example": {
+                "data": {"access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3..."},
+                "message": "",
+            }
+        }
 
 
 class Login401ErrorResponse(CommonErrorResponse):
