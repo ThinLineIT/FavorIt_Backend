@@ -8,6 +8,7 @@ from favorit.funding.schemas import (
     CreateFundingRequestBody,
     CreateFundingResponse,
 )
+from favorit.integration.auth.authentication import FavorItAuth
 
 funding_router = Router(tags=["Funding"])
 
@@ -18,7 +19,7 @@ funding_router = Router(tags=["Funding"])
     summary="펀딩 생성",
     description="펀딩을 생성 합니다",
     response={201: CreateFundingResponse, 400: CreateFunding400ErrorResponse},
-    auth=None,
+    auth=FavorItAuth(),
 )
 def create_funding(request, request_body: CreateFundingRequestBody):
     return HTTPStatus.CREATED, CreateFundingResponse(data=handle_create_funding(request_body))
