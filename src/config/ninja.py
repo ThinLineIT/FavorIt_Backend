@@ -17,10 +17,7 @@ api = NinjaAPI(
 
 @api.exception_handler(ValidationError)
 def validation_errors(request, exc):
-    return Response(data=[], status=HTTPStatus.BAD_REQUEST)
-
-
-# api.add_exception_handler(ValidationError, validation_error_handler)
+    return Response(data={"detail": exc.errors[0]["msg"], "message": ""}, status=HTTPStatus.BAD_REQUEST)
 
 
 api.add_router("/auth", auth_router)
