@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -127,3 +128,10 @@ CORS_ALLOW_HEADERS = (
     "x-requested-with",
 )
 CORS_ORIGIN_ALLOW_ALL = True
+
+
+# JWT
+NINJA_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60 * 24 * 7),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+}
