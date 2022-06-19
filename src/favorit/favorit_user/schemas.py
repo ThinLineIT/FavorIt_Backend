@@ -32,11 +32,15 @@ class Login401ErrorResponse(CommonErrorResponse):
 
 
 class RefreshTokenRequest(Schema):
-    access_token: str = Field(description="만료된 access token")
+    refresh_token: str = Field(description="로그인 했을 때 받은 refresh token")
 
     class Config:
-        schema_extra = {"example": {"access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3..."}}
+        schema_extra = {"example": {"refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3..."}}
 
 
 class RefreshToken401ErrorResponse(CommonErrorResponse):
+    detail: str
+
+
+class RefreshToken400ErrorResponse(CommonErrorResponse):
     detail: str

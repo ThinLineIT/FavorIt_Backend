@@ -7,6 +7,7 @@ from favorit.favorit_user.schemas import (
     Login401ErrorResponse,
     LoginRequest,
     LoginResponse,
+    RefreshToken400ErrorResponse,
     RefreshToken401ErrorResponse,
     RefreshTokenRequest,
 )
@@ -31,7 +32,7 @@ def login(request, request_body: LoginRequest):
     url_name="refresh_token",
     summary="refresh token을 발행",
     description="refresh token을 발행 합니다.",
-    response={200: LoginResponse, 400: RefreshToken401ErrorResponse},
+    response={200: LoginResponse, 400: RefreshToken400ErrorResponse, 401: RefreshToken401ErrorResponse},
     auth=None,
 )
 def refresh_token(request, request_body: RefreshTokenRequest):

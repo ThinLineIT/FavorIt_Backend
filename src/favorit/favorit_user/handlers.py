@@ -1,3 +1,5 @@
+import time
+from datetime import datetime
 from http import HTTPStatus
 
 import jwt
@@ -27,11 +29,20 @@ def handle_login(request_body: LoginRequest) -> dict[str, str]:
 
 def handle_refresh_token(request_body: RefreshTokenRequest) -> dict[str, str]:
     try:
-        decoded = jwt.decode(request_body.access_token, settings.SECRET_KEY, ["HS256"])
+        decoded = jwt.decode(request_body.refresh_token, settings.SECRET_KEY, ["HS256"])
     except DecodeError:
-        raise HttpError(status_code=HTTPStatus.BAD_REQUEST, message="access token 형태가 올바르지 않습니다.")
+        raise HttpError(status_code=HTTPStatus.UNAUTHORIZED, message="refresh token 형태가 올바르지 않습니다.")
     else:
+        token_type = decoded["token_type"]
         favorit_user_id = decoded["user_id"]
+        expired_time = decoded["exp"]
+
+    timestamp_now = int(time.mktime(datetime.now().timetuple()))
+    if timestamp_now > expired_time:
+        raise HttpError(status_code=HTTPStatus.UNAUTHORIZED, message="refresh token 만료시간이 지났습니다.")
+
+    if token_type != "refresh":
+        raise HttpError(status_code=HTTPStatus.UNAUTHORIZED, message="token의 payload 값이 유효하지 않습니다")
 
     favorit_user = FavorItUser.objects.filter(id=favorit_user_id).first()
     if favorit_user is None:
