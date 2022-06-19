@@ -37,7 +37,7 @@ def create_funding(request, request_body: CreateFundingRequestBody):
 @funding_router.get(
     path="/funding/{funding_id}",
     url_name="retrieve_funding_detail",
-    summary="펀딩 상세",
+    summary="펀딩 상세 - mock",
     description="펀딩상세 정보를 보여줍니다",
     response={200: RetrievingFundingDetailResponse},
     auth=FavorItAuth(),
@@ -49,7 +49,7 @@ def retrieve_funding_detail(request, funding_id: int = Path(...)):
 @funding_router.post(
     path="/funding/{funding_id}/close",
     url_name="close_funding",
-    summary="펀딩 마감",
+    summary="펀딩 마감 - mock",
     description="생성한 펀딩을 마감 합니다",
     response={200: CloseFundingResponse},
     auth=FavorItAuth(),
@@ -62,7 +62,7 @@ def close_funding(request, funding_id: int = Path(...)):
 @funding_router.post(
     path="/funding/{funding_id}/payment",
     url_name="pay_funding",
-    summary="선물 하기",
+    summary="선물 하기 - mock",
     description="펀딩 제품의 가격을 결제 합니다",
     response={200: PayFundingResponse},
     auth=FavorItAuth(),
