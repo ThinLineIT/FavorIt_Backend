@@ -2,10 +2,11 @@ from typing import Tuple
 
 from ninja_jwt.tokens import RefreshToken
 
-from favorit.favorit_user.models import FavorItUser
 
+class AuthTokenPublisher:
+    def __init__(self, favorit_user):
+        self.favorit_user = favorit_user
 
-def get_auth_tokens(kakao_user_id: int) -> Tuple[str, str]:
-    favorit_user, _ = FavorItUser.objects.get_or_create(kakao_user_id=kakao_user_id)
-    refresh = RefreshToken.for_user(favorit_user)
-    return str(refresh.access_token), str(refresh)
+    def publish(self) -> Tuple[str, str]:
+        refresh = RefreshToken.for_user(self.favorit_user)
+        return str(refresh.access_token), str(refresh)

@@ -5,8 +5,9 @@ from django.conf import settings
 from jwt import DecodeError
 from ninja.errors import HttpError
 
+from favorit.favorit_user.models import FavorItUser
 from favorit.favorit_user.schemas import LoginRequest, RefreshTokenRequest
-from favorit.favorit_user.services import get_auth_tokens
+from favorit.favorit_user.services import AuthTokenPublisher
 from favorit.integration.kakao.user_info_fetcher import KakaoUserInfoFetcher
 
 
@@ -17,7 +18,10 @@ def handle_login(request_body: LoginRequest) -> dict[str, str]:
     if kakao_user_info.get("id") is None:
         raise HttpError(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, message="카카오 유저 정보를 읽어오는데 실패 하였습니다")
 
-    access_token, refresh_token = get_auth_tokens(kakao_user_id=kakao_user_info["id"])
+    favorit_user, _ = FavorItUser.objects.get_or_create(kakao_user_id=kakao_user_info["id"])
+    auth_token_publisher = AuthTokenPublisher(favorit_user=favorit_user)
+    access_token, refresh_token = auth_token_publisher.publish()
+
     return {"access_token": access_token, "refresh_token": refresh_token}
 
 
@@ -27,7 +31,13 @@ def handle_refresh_token(request_body: RefreshTokenRequest) -> dict[str, str]:
     except DecodeError:
         raise HttpError(status_code=HTTPStatus.BAD_REQUEST, message="access token 형태가 올바르지 않습니다.")
     else:
-        kaka_user_id = decoded["user_id"]
+        kakao_user_id = decoded["user_id"]
 
-    access_token, refresh_token = get_auth_tokens(kakao_user_id=kaka_user_id)
+    favorit_user = FavorItUser.objects.filter(kakao_user_id=kakao_user_id).first()
+    if favorit_user is None:
+        raise HttpError(status_code=HTTPStatus.BAD_REQUEST, message=f"user_id: {kakao_user_id}가 존재하지 않습니다")
+
+    auth_token_publisher = AuthTokenPublisher(favorit_user=favorit_user)
+    access_token, refresh_token = auth_token_publisher.publish()
+
     return {"access_token": access_token, "refresh_token": refresh_token}
