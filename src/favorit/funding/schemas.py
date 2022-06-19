@@ -17,7 +17,6 @@ class CreateFundingRequestBody(Schema):
     contents: str = Field(description="펀딩 내용")
     due_date: date = Field(description="펀딩 만료 기한")
     product: Product = Field(description="펀딩 제품")
-    recipient_name: str = Field(description="수신자 이름")
 
     class Config:
         schema_extra = {
@@ -30,7 +29,6 @@ class CreateFundingRequestBody(Schema):
                     "option": "WIFI에 색상은 금색 256GB",
                     "price": 779000,
                 },
-                "recipient_name": "신윤권",
             }
         }
 

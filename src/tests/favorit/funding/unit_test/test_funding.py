@@ -17,7 +17,6 @@ class TestFundingCreator:
                 "option": "WIFI에 색상은 금색 256GB",
                 "price": 779000,
             },
-            "recipient_name": "신윤권",
         }
         request_body = CreateFundingRequestBody(**valid_request_body)
         funding_creator = FundingCreator(request_body=request_body)

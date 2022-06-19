@@ -21,7 +21,6 @@ class TestCreateFunding:
                 "option": "WIFI에 색상은 금색 256GB",
                 "price": 779000,
             },
-            "recipient_name": "신윤권",
         }
         response = client.post(
             path=reverse("favorit:create_funding"),
