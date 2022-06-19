@@ -1,11 +1,12 @@
-from ninja_jwt.tokens import RefreshToken
-
 from favorit.debug.schemas import DebugLoginRequest
 from favorit.favorit_user.models import FavorItUser
+from favorit.favorit_user.services import AuthTokenPublisher
 
 
 def debug_handle_login(request_body: DebugLoginRequest):
-    favorit_user, _ = FavorItUser.objects.get_or_create(kakao_user_id=request_body.user_id)
+    favorit_user, _ = FavorItUser.objects.get_or_create(kakao_user_id=request_body.kakao_user_id)
 
-    refresh = RefreshToken.for_user(favorit_user)
-    return {"access_token": str(refresh.access_token)}
+    auth_token_publisher = AuthTokenPublisher(favorit_user=favorit_user)
+    access_token, refresh_token = auth_token_publisher.publish()
+
+    return {"access_token": access_token, "refresh_token": refresh_token}

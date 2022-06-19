@@ -31,11 +31,11 @@ def handle_refresh_token(request_body: RefreshTokenRequest) -> dict[str, str]:
     except DecodeError:
         raise HttpError(status_code=HTTPStatus.BAD_REQUEST, message="access token 형태가 올바르지 않습니다.")
     else:
-        kakao_user_id = decoded["user_id"]
+        favorit_user_id = decoded["user_id"]
 
-    favorit_user = FavorItUser.objects.filter(kakao_user_id=kakao_user_id).first()
+    favorit_user = FavorItUser.objects.filter(id=favorit_user_id).first()
     if favorit_user is None:
-        raise HttpError(status_code=HTTPStatus.BAD_REQUEST, message=f"user_id: {kakao_user_id}가 존재하지 않습니다")
+        raise HttpError(status_code=HTTPStatus.BAD_REQUEST, message=f"user_id: {favorit_user}가 존재하지 않습니다")
 
     auth_token_publisher = AuthTokenPublisher(favorit_user=favorit_user)
     access_token, refresh_token = auth_token_publisher.publish()
