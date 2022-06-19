@@ -18,11 +18,25 @@ class LoginResponse(CommonResponse):
     class Config:
         schema_extra = {
             "example": {
-                "data": {"access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3..."},
+                "data": {
+                    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3...",
+                    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkbacDE.eyJzdWIiOiIxMjM0NTY3...",
+                },
                 "message": "",
             }
         }
 
 
 class Login401ErrorResponse(CommonErrorResponse):
+    detail: str
+
+
+class RefreshTokenRequest(Schema):
+    access_token: str = Field(description="만료된 access token")
+
+    class Config:
+        schema_extra = {"example": {"access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3..."}}
+
+
+class RefreshToken401ErrorResponse(CommonErrorResponse):
     detail: str
