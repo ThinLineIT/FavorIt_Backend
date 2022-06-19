@@ -39,3 +39,37 @@ class CreateFundingResponse(CommonResponse):
 
 class CreateFunding400ErrorResponse(CommonErrorResponse):
     detail: str = Field(default="fail creating funding")
+
+
+class RetrievingFundingDetailResponse(CommonResponse):
+    pass
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "data": {
+                    "name": "윤권이의 생일선물은 아이패드로 부탁해",
+                    "contents": "궈니는 아이패드가 참 좋더라",
+                    "due_date": "2022-09-03",
+                    "progre"
+                    "product": {
+                        "link": "https://www.apple.com/kr/shop/buy-ipad/ipad-air",
+                        "option": "WIFI에 색상은 금색 256GB",
+                        "price": 779000,
+                    },
+                },
+                "message": "",
+            }
+        }
+
+
+class CloseFundingResponse(CommonResponse):
+    pass
+
+
+class PayFundingRequestBody(Schema):
+    amound: int
+
+
+class PayFundingResponse(CommonResponse):
+    pass
