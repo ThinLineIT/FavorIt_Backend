@@ -5,4 +5,4 @@ class DebugLoginRequest(Schema):
     kakao_user_id: str
 
     class Config:
-        schema_extra = {"example": {"user_id": "11223"}}
+        schema_extra = {"example": {"kakao_user_id": "11223"}}
