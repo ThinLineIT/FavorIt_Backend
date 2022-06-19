@@ -31,5 +31,7 @@ class TestCreateFunding:
         data = response.json()
         assert data["message"] == ""
         assert Funding.objects.count() == 1
-        assert data["data"]["funding_id"] == Funding.objects.all()[0].id
+        funding = Funding.objects.all()[0]
+        assert data["data"]["funding_id"] == funding.id
+        assert data["data"]["product_link"] == funding.product.link
         assert response.status_code == HTTPStatus.CREATED

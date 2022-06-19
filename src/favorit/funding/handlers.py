@@ -8,4 +8,4 @@ from favorit.funding.services import FundingCreator
 def handle_create_funding(request_body: CreateFundingRequestBody) -> dict[str, Any]:
     funding_creator = FundingCreator(request_body=request_body)
     funding: Funding = funding_creator.create()
-    return {"funding_id": funding.id}
+    return {"funding_id": funding.id, "product_link": funding.product.link}
