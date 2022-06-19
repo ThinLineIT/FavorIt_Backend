@@ -68,7 +68,14 @@ class CloseFundingResponse(CommonResponse):
 
 
 class PayFundingRequestBody(Schema):
-    amound: int
+    amount: int = Field(description="선물하기 결제 금액")
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "amount": 570000,
+            }
+        }
 
 
 class PayFundingResponse(CommonResponse):
