@@ -25,7 +25,7 @@ funding_router = Router(tags=["Funding"])
 @funding_router.post(
     path="/funding",
     url_name="create_funding",
-    summary="펀딩 생성",
+    summary="펀딩 생성 - need access token in header",
     description="펀딩을 생성 합니다",
     response={201: CreateFundingResponse, 400: CreateFunding400ErrorResponse},
     auth=FavorItAuth(),
@@ -37,7 +37,7 @@ def create_funding(request, request_body: CreateFundingRequestBody):
 @funding_router.get(
     path="/funding/{funding_id}",
     url_name="retrieve_funding_detail",
-    summary="펀딩 상세",
+    summary="펀딩 상세 - need access token in header",
     description="펀딩상세 정보를 보여줍니다",
     response={200: RetrievingFundingDetailResponse},
     auth=FavorItAuth(),

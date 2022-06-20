@@ -18,7 +18,7 @@ auth_router = Router(tags=["Auth"])
 @auth_router.post(
     path="/login",
     url_name="login",
-    summary="로그인을 위한 JWT를 반환",
+    summary="로그인을 위한 JWT를 반환 - no need access token in header",
     description="로그인을 위한 JWT를 반환합니다. 추후에 refresh token 추가 예정",
     response={200: LoginResponse, 401: Login401ErrorResponse},
     auth=None,
@@ -30,7 +30,7 @@ def login(request, request_body: LoginRequest):
 @auth_router.post(
     path="/refresh-token",
     url_name="refresh_token",
-    summary="refresh token을 발행",
+    summary="refresh token을 발행 - no need access token in header",
     description="refresh token을 발행 합니다.",
     response={200: LoginResponse, 400: RefreshToken400ErrorResponse, 401: RefreshToken401ErrorResponse},
     auth=None,
