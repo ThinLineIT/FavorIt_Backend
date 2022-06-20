@@ -37,7 +37,7 @@ def create_funding(request, request_body: CreateFundingRequestBody):
 @funding_router.get(
     path="/funding/{funding_id}",
     url_name="retrieve_funding_detail",
-    summary="펀딩 상세 - mock",
+    summary="펀딩 상세",
     description="펀딩상세 정보를 보여줍니다",
     response={200: RetrievingFundingDetailResponse},
     auth=FavorItAuth(),

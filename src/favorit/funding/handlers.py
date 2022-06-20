@@ -1,4 +1,8 @@
+from http import HTTPStatus
 from typing import Any
+
+from django.conf import settings
+from ninja.errors import HttpError
 
 from favorit.funding.models import Funding
 from favorit.funding.schemas import CreateFundingRequestBody, PayFundingRequestBody
@@ -12,16 +16,20 @@ def handle_create_funding(request_body: CreateFundingRequestBody) -> dict[str, A
 
 
 def handle_retrieve_funding_detail(funding_id: int) -> dict[str, Any]:
+    funding = Funding.objects.filter(id=funding_id).first()
+    if funding is None:
+        raise HttpError(status_code=HTTPStatus.BAD_REQUEST, message="펀딩이 존재 하지 않습니다.")
+
     return {
-        "name": "윤권이의 생일선물은 아이패드로 부탁해",
-        "contents": "궈니는 아이패드가 참 좋더라",
-        "due_date": "2022-09-03",
-        "progress_percent": 33,
-        "link_for_sharing": "https://www.favorit.com/funding/1001",
+        "name": funding.name,
+        "contents": funding.contents,
+        "due_date": funding.due_date,
+        "progress_percent": 0,  # 일단 0 percent로 세팅함
+        "link_for_sharing": f"{settings.BASE_URL}/funding/{funding.id}",
         "product": {
-            "link": "https://www.apple.com/kr/shop/buy-ipad/ipad-air",
-            "option": "WIFI에 색상은 금색 256GB",
-            "price": 779000,
+            "link": funding.product.link,
+            "option": funding.product.option,
+            "price": funding.product.price,
         },
     }
 

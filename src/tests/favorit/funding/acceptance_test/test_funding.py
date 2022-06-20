@@ -4,7 +4,7 @@ import pytest
 from django.test.client import Client
 from django.urls import reverse
 
-from favorit.funding.models import Funding
+from favorit.funding.models import Funding, Product
 
 client = Client()
 
@@ -35,3 +35,37 @@ class TestCreateFunding:
         assert data["data"]["funding_id"] == funding.id
         assert data["data"]["product_link"] == funding.product.link
         assert response.status_code == HTTPStatus.CREATED
+
+
+class TestRetrieveFunding:
+    @pytest.mark.django_db
+    def test_retrieve_funding_on_success(self, jwt_access_token):
+        product = Product.objects.create(link="testlink", price=1000, option="some options")
+        funding = Funding.objects.create(
+            product=product, name="some funding", contents="some contents", due_date="2022-01-01"
+        )
+        response = client.get(
+            path=reverse("favorit:retrieve_funding_detail", kwargs={"funding_id": funding.id}),
+            content_type="application/json",
+            **{"HTTP_Authorization": f"Bearer {jwt_access_token}"},
+        )
+        assert response.status_code == HTTPStatus.OK
+        data = response.json()
+        assert data["message"] == ""
+        assert data["data"]["name"] == funding.name
+        assert data["data"]["contents"] == funding.contents
+        assert data["data"]["due_date"] == funding.due_date
+        assert data["data"]["progress_percent"] == 0
+        assert data["data"]["link_for_sharing"] == f"https://www.favorit.com/funding/{funding.id}"
+        assert data["data"]["product"]["link"] == product.link
+        assert data["data"]["product"]["option"] == product.option
+        assert data["data"]["product"]["price"] == product.price
+
+    @pytest.mark.django_db
+    def test_retrieve_funding_on_fail(self, jwt_access_token):
+        response = client.get(
+            path=reverse("favorit:retrieve_funding_detail", kwargs={"funding_id": 111223}),
+            content_type="application/json",
+            **{"HTTP_Authorization": f"Bearer {jwt_access_token}"},
+        )
+        assert response.status_code == HTTPStatus.BAD_REQUEST

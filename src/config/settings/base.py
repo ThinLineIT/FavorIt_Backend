@@ -135,3 +135,5 @@ NINJA_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60 * 24 * 7),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
 }
+
+BASE_URL = env.str("BASE_URL", default="https://www.favorit.com")
