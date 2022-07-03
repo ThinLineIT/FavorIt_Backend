@@ -10,6 +10,11 @@ class Funding(CommonTimestamp):
     due_date = models.DateField(help_text="펀딩 만료 기한")
 
 
+class FundingAmount(CommonTimestamp):
+    funding = models.ForeignKey("Funding", on_delete=models.DO_NOTHING, help_text="펀딩 ID")
+    amount = models.PositiveBigIntegerField(help_text="펀딩 모금 금액")
+
+
 class Product(CommonTimestamp):
     link = models.CharField(max_length=500, help_text="제품 링크")
     price = models.IntegerField(help_text="제품 가격")
