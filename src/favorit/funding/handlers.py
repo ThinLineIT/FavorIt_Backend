@@ -4,7 +4,7 @@ from typing import Any
 from django.conf import settings
 from ninja.errors import HttpError
 
-from favorit.funding.models import Funding
+from favorit.funding.models import Funding, FundingAmount
 from favorit.funding.schemas import CreateFundingRequestBody, PayFundingRequestBody
 from favorit.funding.services import FundingCreator
 
@@ -38,5 +38,7 @@ def handle_close_funding(funding_id: int) -> dict[str, Any]:
     pass
 
 
-def handle_pay_funding(funding_id: int, request_body: PayFundingRequestBody) -> dict[str, Any]:
-    pass
+def handle_pay_funding(funding_id: int, request_body: PayFundingRequestBody):
+    funding = Funding.objects.filter(id=funding_id).first()
+    funding_amount, _ = FundingAmount.objects.get_or_create(funding=funding)
+    funding_amount.add_amount(request_body.amount)

@@ -12,7 +12,11 @@ class Funding(CommonTimestamp):
 
 class FundingAmount(CommonTimestamp):
     funding = models.ForeignKey("Funding", on_delete=models.DO_NOTHING, help_text="펀딩 ID")
-    amount = models.PositiveBigIntegerField(help_text="펀딩 모금 금액")
+    amount = models.PositiveBigIntegerField(help_text="펀딩 모금 금액", default=0)
+
+    def add_amount(self, amount):
+        self.amount = amount
+        self.save()
 
 
 class Product(CommonTimestamp):

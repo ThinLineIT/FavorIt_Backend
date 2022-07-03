@@ -62,7 +62,7 @@ def close_funding(request, funding_id: int = Path(...)):
 @funding_router.post(
     path="/funding/{funding_id}/payment",
     url_name="pay_funding",
-    summary="선물 하기 - mock",
+    summary="선물 하기",
     description="펀딩 제품의 가격을 결제 합니다",
     response={200: PayFundingResponse},
     auth=FavorItAuth(),
