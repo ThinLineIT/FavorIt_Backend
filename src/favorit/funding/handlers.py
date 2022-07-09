@@ -20,11 +20,13 @@ def handle_retrieve_funding_detail(funding_id: int) -> dict[str, Any]:
     if funding is None:
         raise HttpError(status_code=HTTPStatus.BAD_REQUEST, message="펀딩이 존재 하지 않습니다.")
 
+    funding_amount = FundingAmount.objects.filter(funding=funding).first()
+    amount = funding_amount and funding_amount.amount
     return {
         "name": funding.name,
         "contents": funding.contents,
         "due_date": funding.due_date,
-        "progress_percent": 0,  # 일단 0 percent로 세팅함
+        "progress_percent": funding.progress_percent(amount or 0),
         "link_for_sharing": f"{settings.BASE_URL}/funding/{funding.id}",
         "product": {
             "link": funding.product.link,

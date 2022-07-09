@@ -9,6 +9,9 @@ class Funding(CommonTimestamp):
     contents = models.TextField(help_text="펀딩 내용")
     due_date = models.DateField(help_text="펀딩 만료 기한")
 
+    def progress_percent(self, total_amount) -> int:
+        return int(total_amount / self.product.price * 100)
+
 
 class FundingAmount(CommonTimestamp):
     funding = models.ForeignKey("Funding", on_delete=models.DO_NOTHING, help_text="펀딩 ID")
