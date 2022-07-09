@@ -10,7 +10,7 @@ class Funding(CommonTimestamp):
     due_date = models.DateField(help_text="펀딩 만료 기한")
 
     def progress_percent(self, total_amount) -> int:
-        return int(total_amount / self.product.price * 100)
+        return int((total_amount / self.product.price) * 100)
 
 
 class FundingAmount(CommonTimestamp):
@@ -18,7 +18,7 @@ class FundingAmount(CommonTimestamp):
     amount = models.PositiveBigIntegerField(help_text="펀딩 모금 금액", default=0)
 
     def add_amount(self, amount):
-        self.amount = amount
+        self.amount += amount
         self.save()
 
 
