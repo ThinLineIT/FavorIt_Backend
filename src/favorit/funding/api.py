@@ -39,8 +39,8 @@ def create_funding(request, request_body: CreateFundingRequestBody):
 @funding_router.get(
     path="/funding/{funding_id}",
     url_name="retrieve_funding_detail",
-    summary="펀딩 상세 - need access token in header",
-    description="펀딩상세 정보를 보여줍니다",
+    summary="펀딩 상세 - need access token in header or not",
+    description="펀딩상세 정보를 보여줍니다 - 회원의 경우에는 token이 필요하고, 비회원의 경우는 token이 필요하지 않습니다",
     response={200: RetrievingFundingDetailResponse},
     auth=FavorItAuthWithNoMember(),
 )
@@ -70,7 +70,7 @@ def close_funding(request, funding_id: int = Path(...)):
 @funding_router.post(
     path="/funding/{funding_id}/payment",
     url_name="pay_funding",
-    summary="선물 하기",
+    summary="선물 하기 - need access token in header",
     description="펀딩 제품의 가격을 결제 합니다",
     response={200: PayFundingResponse},
     auth=FavorItAuth(),
