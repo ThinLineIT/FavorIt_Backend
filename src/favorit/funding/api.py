@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from typing import Optional
 
 from ninja import Path, Router
 
@@ -18,7 +17,7 @@ from favorit.funding.schemas import (
     PayFundingResponse,
     RetrievingFundingDetailResponse,
 )
-from favorit.integration.auth.authentication import FavorItAuth
+from favorit.integration.auth.authentication import FavorItAuth, FavorItAuthWithNoMember
 
 funding_router = Router(tags=["Funding"])
 
@@ -42,14 +41,13 @@ def create_funding(request, request_body: CreateFundingRequestBody):
     summary="펀딩 상세 - need access token in header",
     description="펀딩상세 정보를 보여줍니다",
     response={200: RetrievingFundingDetailResponse},
-    auth=None,
+    auth=FavorItAuthWithNoMember(),
 )
 def retrieve_funding_detail(request, funding_id: int = Path(...)):
-    authorization: Optional[str] = request.headers.get("Authorization")
-    if authorization:
-        auth = FavorItAuth()
-        payload = auth.authenticate(request=request, token=authorization.split()[1])
+    if payload := request.auth:
         user_id = payload["user_id"]
+    else:
+        user_id = None
     return HTTPStatus.OK, RetrievingFundingDetailResponse(data=handle_retrieve_funding_detail(funding_id, user_id))
 
 
