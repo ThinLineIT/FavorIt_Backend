@@ -1,6 +1,7 @@
 from django.db import models
 
 from favorit.common.models import CommonTimestamp
+from favorit.funding.enums import FundingState
 
 
 class Funding(CommonTimestamp):
@@ -8,6 +9,9 @@ class Funding(CommonTimestamp):
     name = models.CharField(max_length=200, help_text="펀딩 이름")
     contents = models.TextField(help_text="펀딩 내용")
     due_date = models.DateField(help_text="펀딩 만료 기한")
+    state = models.CharField(
+        max_length=100, choices=FundingState.choices, default=FundingState.OPENED, help_text="펀딩 상태"
+    )
 
     def progress_percent(self, total_amount) -> int:
         return int((total_amount / self.product.price) * 100)
