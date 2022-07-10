@@ -1,5 +1,7 @@
 from http import HTTPStatus
 
+from django.http import HttpResponse
+from django.views.decorators.http import require_GET
 from ninja.errors import HttpError, ValidationError
 from ninja.responses import Response
 from ninja_extra import NinjaExtraAPI
@@ -16,12 +18,9 @@ api = NinjaExtraAPI(
 )
 
 
-@api.get(
-    path="/health_check",
-    url_name="health_check",
-)
+@require_GET
 def health_check(request):
-    return HTTPStatus.OK
+    return HttpResponse("OK")
 
 
 @api.exception_handler(ValidationError)
