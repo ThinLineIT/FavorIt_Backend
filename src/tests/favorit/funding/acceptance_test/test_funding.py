@@ -1,6 +1,7 @@
 from http import HTTPStatus
 
 import pytest
+from django.conf import settings
 from django.test.client import Client
 from django.urls import reverse
 
@@ -34,7 +35,7 @@ class TestCreateFunding:
         assert Funding.objects.count() == 1
         funding = Funding.objects.all()[0]
         assert data["data"]["funding_id"] == funding.id
-        assert data["data"]["product_link"] == funding.product.link
+        assert data["data"]["link_for_sharing"] == f"{settings.BASE_URL}/funding/{funding.id}"
         assert response.status_code == HTTPStatus.CREATED
 
 

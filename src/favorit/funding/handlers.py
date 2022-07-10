@@ -12,7 +12,7 @@ from favorit.funding.services import FundingCreator
 def handle_create_funding(request_body: CreateFundingRequestBody, user_id) -> dict[str, Any]:
     funding_creator = FundingCreator(request_body=request_body, user_id=user_id)
     funding: Funding = funding_creator.create()
-    return {"funding_id": funding.id, "product_link": funding.product.link}
+    return {"funding_id": funding.id, "link_for_sharing": f"{settings.BASE_URL}/funding/{funding.id}"}
 
 
 def handle_retrieve_funding_detail(funding_id: int, user_id: Optional[int]) -> dict[str, Any]:
