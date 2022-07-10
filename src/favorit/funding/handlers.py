@@ -25,6 +25,7 @@ def handle_retrieve_funding_detail(funding_id: int) -> dict[str, Any]:
     return {
         "name": funding.name,
         "contents": funding.contents,
+        "state": funding.state,
         "due_date": funding.due_date,
         "progress_percent": funding.progress_percent(amount or 0),
         "link_for_sharing": f"{settings.BASE_URL}/funding/{funding.id}",
