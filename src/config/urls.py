@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from config.ninja import api
+from config.ninja import api, health_check
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("health_check", health_check),
     path("api/", api.urls),
 ]
