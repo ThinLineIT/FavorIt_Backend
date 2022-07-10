@@ -4,6 +4,7 @@ import pytest
 from django.test.client import Client
 from django.urls import reverse
 
+from favorit.favorit_user.models import FavorItUser
 from favorit.funding.models import Funding, Product
 
 client = Client()
@@ -41,8 +42,9 @@ class TestRetrieveFunding:
     @pytest.mark.django_db
     def test_retrieve_funding_on_success(self, jwt_access_token):
         product = Product.objects.create(link="testlink", price=1000, option="some options")
+        maker = FavorItUser.objects.create(kakao_user_id="12345")
         funding = Funding.objects.create(
-            product=product, name="some funding", contents="some contents", due_date="2022-01-01"
+            maker=maker, product=product, name="some funding", contents="some contents", due_date="2022-01-01"
         )
         response = client.get(
             path=reverse("favorit:retrieve_funding_detail", kwargs={"funding_id": funding.id}),

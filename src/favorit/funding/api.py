@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from typing import Optional
 
 from ninja import Path, Router
 
@@ -31,7 +32,8 @@ funding_router = Router(tags=["Funding"])
     auth=FavorItAuth(),
 )
 def create_funding(request, request_body: CreateFundingRequestBody):
-    return HTTPStatus.CREATED, CreateFundingResponse(data=handle_create_funding(request_body))
+    user_id = request.auth["user_id"]
+    return HTTPStatus.CREATED, CreateFundingResponse(data=handle_create_funding(request_body, user_id))
 
 
 @funding_router.get(
@@ -40,10 +42,15 @@ def create_funding(request, request_body: CreateFundingRequestBody):
     summary="펀딩 상세 - need access token in header",
     description="펀딩상세 정보를 보여줍니다",
     response={200: RetrievingFundingDetailResponse},
-    auth=FavorItAuth(),
+    auth=None,
 )
 def retrieve_funding_detail(request, funding_id: int = Path(...)):
-    return HTTPStatus.OK, RetrievingFundingDetailResponse(data=handle_retrieve_funding_detail(funding_id))
+    authorization: Optional[str] = request.headers.get("Authorization")
+    if authorization:
+        auth = FavorItAuth()
+        payload = auth.authenticate(request=request, token=authorization.split()[1])
+        user_id = payload["user_id"]
+    return HTTPStatus.OK, RetrievingFundingDetailResponse(data=handle_retrieve_funding_detail(funding_id, user_id))
 
 
 @funding_router.post(

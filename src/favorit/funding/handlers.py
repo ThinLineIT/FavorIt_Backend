@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from typing import Any
+from typing import Any, Optional
 
 from django.conf import settings
 from ninja.errors import HttpError
@@ -9,13 +9,13 @@ from favorit.funding.schemas import CreateFundingRequestBody, PayFundingRequestB
 from favorit.funding.services import FundingCreator
 
 
-def handle_create_funding(request_body: CreateFundingRequestBody) -> dict[str, Any]:
-    funding_creator = FundingCreator(request_body=request_body)
+def handle_create_funding(request_body: CreateFundingRequestBody, user_id) -> dict[str, Any]:
+    funding_creator = FundingCreator(request_body=request_body, user_id=user_id)
     funding: Funding = funding_creator.create()
     return {"funding_id": funding.id, "product_link": funding.product.link}
 
 
-def handle_retrieve_funding_detail(funding_id: int) -> dict[str, Any]:
+def handle_retrieve_funding_detail(funding_id: int, user_id: Optional[int]) -> dict[str, Any]:
     funding = Funding.objects.filter(id=funding_id).first()
     if funding is None:
         raise HttpError(status_code=HTTPStatus.BAD_REQUEST, message="펀딩이 존재 하지 않습니다.")
@@ -26,6 +26,7 @@ def handle_retrieve_funding_detail(funding_id: int) -> dict[str, Any]:
         "name": funding.name,
         "contents": funding.contents,
         "state": funding.state,
+        "is_maker": user_id == funding.maker.id if user_id else False,
         "due_date": funding.due_date,
         "progress_percent": funding.progress_percent(amount or 0),
         "link_for_sharing": f"{settings.BASE_URL}/funding/{funding.id}",

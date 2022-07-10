@@ -5,6 +5,7 @@ from favorit.funding.enums import FundingState
 
 
 class Funding(CommonTimestamp):
+    maker = models.ForeignKey("FavorItUser", on_delete=models.DO_NOTHING, help_text="펀딩 생성자")
     product = models.ForeignKey("Product", on_delete=models.DO_NOTHING, help_text="제품 ID")
     name = models.CharField(max_length=200, help_text="펀딩 이름")
     contents = models.TextField(help_text="펀딩 내용")
