@@ -13,6 +13,7 @@ from favorit.funding.schemas import (
     CreateFunding400ErrorResponse,
     CreateFundingRequestBody,
     CreateFundingResponse,
+    FundingDetailResponseSchema,
     PayFundingRequestBody,
     PayFundingResponse,
     RetrievingFundingDetailResponse,
@@ -48,7 +49,9 @@ def retrieve_funding_detail(request, funding_id: int = Path(...)):
         user_id = payload["user_id"]
     else:
         user_id = None
-    return HTTPStatus.OK, RetrievingFundingDetailResponse(data=handle_retrieve_funding_detail(funding_id, user_id))
+    return HTTPStatus.OK, RetrievingFundingDetailResponse(
+        data=FundingDetailResponseSchema(**handle_retrieve_funding_detail(funding_id, user_id))
+    )
 
 
 @funding_router.post(

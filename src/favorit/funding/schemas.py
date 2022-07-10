@@ -4,6 +4,7 @@ from typing import Any
 from ninja import Field, Schema
 
 from favorit.common.schemas import CommonErrorResponse, CommonResponse
+from favorit.funding.enums import FundingState
 
 
 class Product(Schema):
@@ -41,8 +42,20 @@ class CreateFunding400ErrorResponse(CommonErrorResponse):
     detail: str = Field(default="fail creating funding")
 
 
-class RetrievingFundingDetailResponse(CommonResponse):
-    pass
+class FundingDetailResponseSchema(Schema):
+    name: str
+    contents: str
+    state: FundingState
+    is_maker: bool
+    due_date: date
+    progress_percent: int
+    link_for_sharing: str
+    product: Product
+
+
+class RetrievingFundingDetailResponse(Schema):
+    data: FundingDetailResponseSchema
+    message: str = Field(description="고객에게 노출이 필요한 메세지", default="")
 
     class Config:
         schema_extra = {
