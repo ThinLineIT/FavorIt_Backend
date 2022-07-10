@@ -16,6 +16,14 @@ api = NinjaExtraAPI(
 )
 
 
+@api.get(
+    path="/health_check",
+    url_name="health_check",
+)
+def health_check(request):
+    return HTTPStatus.OK
+
+
 @api.exception_handler(ValidationError)
 def validation_errors(request, exc):
     return Response(data={"detail": exc.errors[0]["msg"], "message": ""}, status=HTTPStatus.BAD_REQUEST)
