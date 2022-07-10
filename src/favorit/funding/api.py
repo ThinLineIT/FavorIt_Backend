@@ -13,6 +13,7 @@ from favorit.funding.schemas import (
     CreateFunding400ErrorResponse,
     CreateFundingRequestBody,
     CreateFundingResponse,
+    CreatingFundingResponseSchema,
     FundingDetailResponseSchema,
     PayFundingRequestBody,
     PayFundingResponse,
@@ -33,7 +34,9 @@ funding_router = Router(tags=["Funding"])
 )
 def create_funding(request, request_body: CreateFundingRequestBody):
     user_id = request.auth["user_id"]
-    return HTTPStatus.CREATED, CreateFundingResponse(data=handle_create_funding(request_body, user_id))
+    return HTTPStatus.CREATED, CreateFundingResponse(
+        data=CreatingFundingResponseSchema(**handle_create_funding(request_body, user_id))
+    )
 
 
 @funding_router.get(

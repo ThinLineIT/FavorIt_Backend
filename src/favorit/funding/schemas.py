@@ -1,5 +1,4 @@
 from datetime import date
-from typing import Any
 
 from ninja import Field, Schema
 
@@ -34,8 +33,14 @@ class CreateFundingRequestBody(Schema):
         }
 
 
-class CreateFundingResponse(CommonResponse):
-    data: dict[str, Any]
+class CreatingFundingResponseSchema(Schema):
+    funding_id: int
+    link_for_sharing: str
+
+
+class CreateFundingResponse(Schema):
+    data: CreatingFundingResponseSchema
+    message: str = Field(description="고객에게 노출이 필요한 메세지", default="")
 
 
 class CreateFunding400ErrorResponse(CommonErrorResponse):
