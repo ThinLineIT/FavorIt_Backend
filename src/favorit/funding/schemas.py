@@ -108,3 +108,18 @@ class PayFundingResponseSchema(Schema):
 class PayFundingResponse(Schema):
     data: PayFundingResponseSchema
     message: str = Field(description="고객에게 노출이 필요한 메세지", default="")
+
+
+class BankOptionListResponse(Schema):
+    text: str
+    value: str
+    image: str
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "text": "신한",
+                "value": "SHINHAN",
+                "image": "https://s3-favorit-dev.s3.ap-northeast-2.amazonaws.com/bank/shinhan.png",
+            }
+        }

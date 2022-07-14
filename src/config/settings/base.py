@@ -139,3 +139,7 @@ NINJA_JWT = {
 BASE_URL = env.str("BASE_URL", default="https://www.favorit.com")
 
 DEFAULT_DATE_FORMAT = "%Y-%m-%d"
+
+
+S3_BUCKET = env.str("BUCKET", default="s3-favorit-dev")
+S3_BASE_URL = env.str("S3_BASE_URL", default="s3.ap-northeast-2.amazonaws.com")

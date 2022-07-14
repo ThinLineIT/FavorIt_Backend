@@ -2,6 +2,7 @@ from http import HTTPStatus
 
 from ninja import Path, Router
 
+from favorit.funding.enums import BankEnum
 from favorit.funding.handlers import (
     handle_close_funding,
     handle_create_funding,
@@ -9,6 +10,7 @@ from favorit.funding.handlers import (
     handle_retrieve_funding_detail,
 )
 from favorit.funding.schemas import (
+    BankOptionListResponse,
     CloseFundingResponse,
     CreateFunding400ErrorResponse,
     CreateFundingRequestBody,
@@ -83,3 +85,15 @@ def pay_funding(request, request_body: PayFundingRequestBody, funding_id: int = 
     return HTTPStatus.OK, PayFundingResponse(
         data=PayFundingResponseSchema(**handle_pay_funding(funding_id, request_body))
     )
+
+
+@funding_router.post(
+    path="/funding/options/bank",
+    url_name="bank_option_list",
+    summary="은행 옵션 리스트 - need access token in header",
+    description="은행 옵션 리스트를 리턴 합니다",
+    response={200: list[BankOptionListResponse]},
+    auth=FavorItAuth(),
+)
+def retrieve_bank_option_list(request):
+    return HTTPStatus.OK, [BankOptionListResponse(**bank) for bank in BankEnum.option_list()]
