@@ -8,7 +8,7 @@ from favorit.funding.models import Funding
 
 def run():
     today = date.today()
-    to_expire_fundings = Funding.objects.filter(due_date__lt=today)
+    to_expire_fundings = Funding.objects.filter(state=FundingState.OPENED, due_date__lt=today)
     to_expire_fundings.update(state=FundingState.EXPIRED, updated_at=datetime.now())
 
     today_format = datetime.strftime(today, settings.DEFAULT_DATE_FORMAT)
