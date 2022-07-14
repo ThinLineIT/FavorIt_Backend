@@ -72,7 +72,7 @@ def close_funding(request, funding_id: int = Path(...)):
 
 
 @funding_router.post(
-    path="/funding/{funding_id}/payment",
+    path="/funding/{funding_id}/present",
     url_name="pay_funding",
     summary="선물 하기 - need access token in header",
     description="펀딩 제품의 가격을 결제 합니다",
