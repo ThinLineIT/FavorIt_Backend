@@ -17,6 +17,14 @@ class Funding(CommonTimestamp):
     def progress_percent(self, total_amount) -> int:
         return int((total_amount / self.product.price) * 100)
 
+    @property
+    def enable_closed(self) -> bool:
+        return self.state in {FundingState.OPENED, FundingState.EXPIRED}
+
+    def change_state(self, state: FundingState):
+        self.state = state
+        self.save()
+
 
 class FundingAmount(CommonTimestamp):
     funding = models.ForeignKey("Funding", on_delete=models.DO_NOTHING, help_text="펀딩 ID")

@@ -4,6 +4,7 @@ from typing import Any, Optional
 from django.conf import settings
 from ninja.errors import HttpError
 
+from favorit.funding.enums import FundingState
 from favorit.funding.models import Funding, FundingAmount
 from favorit.funding.schemas import CreateFundingRequestBody, PayFundingRequestBody
 from favorit.funding.services import FundingCreator
@@ -38,8 +39,12 @@ def handle_retrieve_funding_detail(funding_id: int, user_id: Optional[int]) -> d
     }
 
 
-def handle_close_funding(funding_id: int) -> dict[str, Any]:
-    pass
+def handle_close_funding(funding_id: int):
+    funding = Funding.objects.get(id=funding_id)
+    if not funding.enable_closed:
+        raise HttpError(status_code=HTTPStatus.BAD_REQUEST, message="펀딩 상태를 변경할 수 없습니다")
+
+    funding.change_state(state=FundingState.CLOSED)
 
 
 def handle_pay_funding(funding_id: int, request_body: PayFundingRequestBody):
