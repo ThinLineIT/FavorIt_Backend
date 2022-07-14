@@ -17,6 +17,7 @@ from favorit.funding.schemas import (
     FundingDetailResponseSchema,
     PayFundingRequestBody,
     PayFundingResponse,
+    PayFundingResponseSchema,
     RetrievingFundingDetailResponse,
 )
 from favorit.integration.auth.authentication import FavorItAuth, FavorItAuthWithNoMember
@@ -79,5 +80,6 @@ def close_funding(request, funding_id: int = Path(...)):
     auth=FavorItAuth(),
 )
 def pay_funding(request, request_body: PayFundingRequestBody, funding_id: int = Path(...)):
-    handle_pay_funding(funding_id, request_body)
-    return HTTPStatus.OK, PayFundingResponse(data="")
+    return HTTPStatus.OK, PayFundingResponse(
+        data=PayFundingResponseSchema(**handle_pay_funding(funding_id, request_body))
+    )

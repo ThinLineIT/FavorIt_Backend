@@ -52,3 +52,4 @@ def handle_pay_funding(funding_id: int, request_body: PayFundingRequestBody):
     funding = Funding.objects.filter(id=funding_id).first()
     funding_amount, _ = FundingAmount.objects.get_or_create(funding=funding)
     funding_amount.add_amount(request_body.amount)
+    return {"funding_id": funding.id, "link_for_sharing": f"{settings.BASE_URL}/funding/{funding.id}"}
