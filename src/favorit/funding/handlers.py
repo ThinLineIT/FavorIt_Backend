@@ -28,6 +28,7 @@ def handle_retrieve_funding_detail(funding_id: int, user_id: Optional[int]) -> d
         "contents": funding.contents,
         "state": funding.state,
         "is_maker": user_id == funding.maker.id if user_id else False,
+        "creation_date": funding.creation_date_format,
         "due_date": funding.due_date,
         "progress_percent": funding.progress_percent(amount or 0),
         "link_for_sharing": f"{settings.BASE_URL}/funding/{funding.id}",

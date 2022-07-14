@@ -137,3 +137,5 @@ NINJA_JWT = {
 }
 
 BASE_URL = env.str("BASE_URL", default="https://www.favorit.com")
+
+DEFAULT_DATE_FORMAT = "%Y-%m-%d"

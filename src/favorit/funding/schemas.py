@@ -52,6 +52,7 @@ class FundingDetailResponseSchema(Schema):
     contents: str
     state: FundingState
     is_maker: bool
+    creation_date: date
     due_date: date
     progress_percent: int
     link_for_sharing: str

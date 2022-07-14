@@ -1,3 +1,6 @@
+from datetime import datetime
+
+from django.conf import settings
 from django.db import models
 
 from favorit.common.models import CommonTimestamp
@@ -14,12 +17,16 @@ class Funding(CommonTimestamp):
         max_length=100, choices=FundingState.choices, default=FundingState.OPENED, help_text="펀딩 상태"
     )
 
-    def progress_percent(self, total_amount) -> int:
-        return int((total_amount / self.product.price) * 100)
-
     @property
     def enable_closed(self) -> bool:
-        return self.state in {FundingState.OPENED, FundingState.EXPIRED}
+        return self.state in FundingState.enable_closed_state()
+
+    @property
+    def creation_date_format(self) -> str:
+        return datetime.strftime(self.created_at, settings.DEFAULT_DATE_FORMAT)
+
+    def progress_percent(self, total_amount) -> int:
+        return int((total_amount / self.product.price) * 100)
 
     def change_state(self, state: FundingState):
         self.state = state
