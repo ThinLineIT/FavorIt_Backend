@@ -4,14 +4,13 @@ import pytest
 from django.test.client import Client
 from django.urls import reverse
 
-from favorit.favorit_user.models import FavorItUser
 from favorit.funding.enums import FundingState
-from favorit.funding.models import Funding, Product
+from tests.favorit.funding.test_mixins import TestFundingMixins
 
 client = Client()
 
 
-class TestCloseFundingAcceptance:
+class TestCloseFundingAcceptance(TestFundingMixins):
     def _call_api(self, funding, jwt_access_token):
         response = client.post(
             path=reverse("favorit:close_funding", kwargs={"funding_id": funding.id}),
@@ -22,11 +21,7 @@ class TestCloseFundingAcceptance:
 
     @pytest.mark.django_db
     def test_close_funding_on_success(self, jwt_access_token):
-        product = Product.objects.create(link="testlink", price=1000, option="some options")
-        maker = FavorItUser.objects.create(kakao_user_id="12345")
-        funding = Funding.objects.create(
-            maker=maker, product=product, name="some funding", contents="some contents", due_date="2022-01-01"
-        )
+        _, _, funding = self.create_funding()
 
         response = self._call_api(funding, jwt_access_token)
 
@@ -37,11 +32,8 @@ class TestCloseFundingAcceptance:
     @pytest.mark.parametrize("not_enable_closed", [FundingState.CLOSED, FundingState.COMPLETED])
     @pytest.mark.django_db
     def test_close_funding_on_fail(self, jwt_access_token, not_enable_closed):
-        product = Product.objects.create(link="testlink", price=1000, option="some options")
-        maker = FavorItUser.objects.create(kakao_user_id="12345")
-        funding = Funding.objects.create(
-            maker=maker, product=product, name="some funding", contents="some contents", due_date="2022-01-01"
-        )
+        _, _, funding = self.create_funding()
+
         funding.state = not_enable_closed
         funding.save()
 

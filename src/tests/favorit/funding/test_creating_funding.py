@@ -9,6 +9,7 @@ from favorit.favorit_user.models import FavorItUser
 from favorit.funding.models import Funding, Product
 from favorit.funding.schemas import CreateFundingRequestBody
 from favorit.funding.services import FundingCreator
+from tests.favorit.funding.test_mixins import TestFundingMixins
 
 client = Client()
 
@@ -41,14 +42,10 @@ class TestCreateFunding:
         assert response.status_code == HTTPStatus.CREATED
 
 
-class TestRetrieveFunding:
+class TestRetrieveFunding(TestFundingMixins):
     @pytest.mark.django_db
     def test_retrieve_funding_on_success(self, jwt_access_token):
-        product = Product.objects.create(link="testlink", price=1000, option="some options")
-        maker = FavorItUser.objects.create(kakao_user_id="12345")
-        funding = Funding.objects.create(
-            maker=maker, product=product, name="some funding", contents="some contents", due_date="2022-01-01"
-        )
+        product, _, funding = self.create_funding()
         response = client.get(
             path=reverse("favorit:retrieve_funding_detail", kwargs={"funding_id": funding.id}),
             content_type="application/json",
