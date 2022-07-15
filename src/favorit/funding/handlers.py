@@ -6,7 +6,11 @@ from ninja.errors import HttpError
 
 from favorit.funding.enums import FundingState
 from favorit.funding.models import Funding, FundingAmount
-from favorit.funding.schemas import CreateFundingRequestBody, PayFundingRequestBody
+from favorit.funding.schemas import (
+    CreateFundingRequestBody,
+    PayFundingRequestBody,
+    VerifyBankAccountRequestBody,
+)
 from favorit.funding.services import FundingCreator
 
 
@@ -53,3 +57,9 @@ def handle_pay_funding(funding_id: int, request_body: PayFundingRequestBody):
     funding_amount, _ = FundingAmount.objects.get_or_create(funding=funding)
     funding_amount.add_amount(request_body.amount)
     return {"funding_id": funding.id, "link_for_sharing": f"{settings.BASE_URL}/funding/{funding.id}"}
+
+
+def handle_verify_bank_account(request_body: VerifyBankAccountRequestBody):
+    if request_body.account_number != "91011112222":
+        raise HttpError(HTTPStatus.BAD_REQUEST, "존재하지 않는 계좌번호입니다.")
+    return {"account_owner_name": "홍길동"}

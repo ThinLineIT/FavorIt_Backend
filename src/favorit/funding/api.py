@@ -8,6 +8,7 @@ from favorit.funding.handlers import (
     handle_create_funding,
     handle_pay_funding,
     handle_retrieve_funding_detail,
+    handle_verify_bank_account,
 )
 from favorit.funding.schemas import (
     BankOptionListResponse,
@@ -21,6 +22,9 @@ from favorit.funding.schemas import (
     PayFundingResponse,
     PayFundingResponseSchema,
     RetrievingFundingDetailResponse,
+    VerifyBankAccountRequestBody,
+    VerifyBankAccountResponse,
+    VerifyBankAccountResponseSchema,
 )
 from favorit.integration.auth.authentication import FavorItAuth, FavorItAuthWithNoMember
 
@@ -97,3 +101,17 @@ def pay_funding(request, request_body: PayFundingRequestBody, funding_id: int = 
 )
 def retrieve_bank_option_list(request):
     return HTTPStatus.OK, [BankOptionListResponse(**bank) for bank in BankEnum.option_list()]
+
+
+@funding_router.post(
+    path="/funding/verification/bank-account",
+    url_name="verification_bank_account",
+    summary="예금계좌 조회 - need access token in header",
+    description="예금계좌를 조회 합니다",
+    response={200: VerifyBankAccountResponse},
+    auth=FavorItAuth(),
+)
+def verify_bank_account(request, request_body: VerifyBankAccountRequestBody):
+    return HTTPStatus.OK, VerifyBankAccountResponse(
+        data=VerifyBankAccountResponseSchema(**handle_verify_bank_account(request_body))
+    )

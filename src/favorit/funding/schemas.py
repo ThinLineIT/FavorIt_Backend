@@ -3,7 +3,7 @@ from datetime import date
 from ninja import Field, Schema
 
 from favorit.common.schemas import CommonErrorResponse, CommonResponse
-from favorit.funding.enums import FundingState
+from favorit.funding.enums import BankEnum, FundingState
 
 
 class Product(Schema):
@@ -123,3 +123,27 @@ class BankOptionListResponse(Schema):
                 "image": "https://s3-favorit-dev.s3.ap-northeast-2.amazonaws.com/bank/shinhan.png",
             }
         }
+
+
+class VerifyBankAccountRequestBody(Schema):
+    bank_code: BankEnum
+    account_number: str
+
+    class Config:
+        schema_extra = {"example": {"bank_code": "NH", "account_number": "91011112222"}}
+
+
+class VerifyBankAccountResponseSchema(Schema):
+    account_owner_name: str
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "account_owner_name": "홍길동",
+            }
+        }
+
+
+class VerifyBankAccountResponse(Schema):
+    data: VerifyBankAccountResponseSchema
+    message: str = Field(description="고객에게 노출이 필요한 메세지", default="")
