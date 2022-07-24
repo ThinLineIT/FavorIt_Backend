@@ -147,3 +147,15 @@ class VerifyBankAccountResponseSchema(Schema):
 class VerifyBankAccountResponse(Schema):
     data: VerifyBankAccountResponseSchema
     message: str = Field(description="고객에게 노출이 필요한 메세지", default="")
+
+
+class PaymentFundingRequest(Schema):
+    funding_id: int
+    full_name: str
+    bank_code: BankEnum
+    account_number: str
+    price: int
+
+
+class PaymentFundingResponse(CommonResponse):
+    pass

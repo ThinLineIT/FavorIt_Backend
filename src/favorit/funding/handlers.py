@@ -5,10 +5,11 @@ from django.conf import settings
 from ninja.errors import HttpError
 
 from favorit.funding.enums import FundingState
-from favorit.funding.models import Funding, FundingAmount
+from favorit.funding.models import Funding, FundingAmount, FundingPaymentResult
 from favorit.funding.schemas import (
     CreateFundingRequestBody,
     PayFundingRequestBody,
+    PaymentFundingRequest,
     VerifyBankAccountRequestBody,
 )
 from favorit.funding.services import FundingCreator
@@ -63,3 +64,16 @@ def handle_verify_bank_account(request_body: VerifyBankAccountRequestBody):
     if request_body.account_number != "91011112222":
         raise HttpError(HTTPStatus.BAD_REQUEST, "존재하지 않는 계좌번호입니다.")
     return {"account_owner_name": "홍길동"}
+
+
+def handle_payment_funding(request_auth, request_body: PaymentFundingRequest):
+    funding = Funding.objects.get(id=request_body.funding_id)
+    if funding.maker.id != request_auth["user_id"]:
+        raise HttpError(HTTPStatus.BAD_REQUEST, "펀딩 생성자가 아닙니다.")
+
+    if funding.state != FundingState.CLOSED:
+        raise HttpError(HTTPStatus.BAD_REQUEST, "펀딩이 닫힘 상태가 아닙니다")
+
+    funding.state = FundingState.COMPLETED
+    funding.save()
+    FundingPaymentResult.objects.create(**request_body.dict())

@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db import models
 
 from favorit.common.models import CommonTimestamp
-from favorit.funding.enums import FundingState
+from favorit.funding.enums import BankEnum, FundingState
 
 
 class Funding(CommonTimestamp):
@@ -46,3 +46,11 @@ class Product(CommonTimestamp):
     link = models.CharField(max_length=500, help_text="제품 링크")
     price = models.IntegerField(help_text="제품 가격")
     option = models.TextField(help_text="제품 옵션")
+
+
+class FundingPaymentResult(CommonTimestamp):
+    funding = models.ForeignKey("Funding", on_delete=models.DO_NOTHING, help_text="펀딩 ID")
+    full_name = models.CharField(max_length=20, help_text="정산 받는 사람 이름")
+    bank_code = models.CharField(max_length=10, choices=BankEnum.choices, help_text="은행")
+    account_number = models.CharField(max_length=30, help_text="계좌 번호")
+    price = models.IntegerField(help_text="정산 받은 금액")

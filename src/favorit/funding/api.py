@@ -7,6 +7,7 @@ from favorit.funding.handlers import (
     handle_close_funding,
     handle_create_funding,
     handle_pay_funding,
+    handle_payment_funding,
     handle_retrieve_funding_detail,
     handle_verify_bank_account,
 )
@@ -21,6 +22,8 @@ from favorit.funding.schemas import (
     PayFundingRequestBody,
     PayFundingResponse,
     PayFundingResponseSchema,
+    PaymentFundingRequest,
+    PaymentFundingResponse,
     RetrievingFundingDetailResponse,
     VerifyBankAccountRequestBody,
     VerifyBankAccountResponse,
@@ -115,3 +118,16 @@ def verify_bank_account(request, request_body: VerifyBankAccountRequestBody):
     return HTTPStatus.OK, VerifyBankAccountResponse(
         data=VerifyBankAccountResponseSchema(**handle_verify_bank_account(request_body))
     )
+
+
+@funding_router.post(
+    path="/funding/{funding_id}/payment",
+    url_name="payment_funding",
+    summary="펀딩 정산 - need access token in header",
+    description="펀딩된 금액을 정산 받습니다",
+    response={200: PaymentFundingResponse},
+    auth=FavorItAuth(),
+)
+def payment_funding(request, request_body: PaymentFundingRequest):
+    handle_payment_funding(request.auth, request_body)
+    return HTTPStatus.OK, PaymentFundingResponse(data="")
