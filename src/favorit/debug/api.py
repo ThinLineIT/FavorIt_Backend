@@ -12,7 +12,7 @@ debug_router = Router(tags=["Debug"])
 @debug_router.post(
     path="/jwt",
     url_name="debug_jwt",
-    summary="Debug를 위한 JWT를 반환 - no need access token in header",
+    summary="Debug를 위한 JWT를 반환",
     description="Debug를 위한 JWT를 반환 - 로그인 없이 JWT 사용을 위함",
     response={200: LoginResponse, 401: Login401ErrorResponse},
     auth=None,

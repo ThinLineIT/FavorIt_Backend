@@ -37,7 +37,7 @@ funding_router = Router(tags=["Funding"])
 @funding_router.post(
     path="/funding",
     url_name="create_funding",
-    summary="펀딩 생성 - need access token in header",
+    summary="펀딩 생성 - token required",
     description="펀딩을 생성 합니다",
     response={201: CreateFundingResponse, 400: CreateFunding400ErrorResponse},
     auth=FavorItAuth(),
@@ -52,7 +52,7 @@ def create_funding(request, request_body: CreateFundingRequestBody):
 @funding_router.get(
     path="/funding/{funding_id}",
     url_name="retrieve_funding_detail",
-    summary="펀딩 상세 - need access token in header or not",
+    summary="펀딩 상세 - token optional",
     description="펀딩상세 정보를 보여줍니다 - 회원의 경우에는 token이 필요하고, 비회원의 경우는 token이 필요하지 않습니다",
     response={200: RetrievingFundingDetailResponse},
     auth=FavorItAuthWithNoMember(),
@@ -70,7 +70,7 @@ def retrieve_funding_detail(request, funding_id: int = Path(...)):
 @funding_router.post(
     path="/funding/{funding_id}/close",
     url_name="close_funding",
-    summary="펀딩 마감 - need access token in header",
+    summary="펀딩 마감 - token required",
     description="생성한 펀딩을 마감 합니다",
     response={200: CloseFundingResponse},
     auth=FavorItAuth(),
@@ -83,7 +83,7 @@ def close_funding(request, funding_id: int = Path(...)):
 @funding_router.post(
     path="/funding/{funding_id}/present",
     url_name="pay_funding",
-    summary="선물 하기 - need access token in header",
+    summary="선물 하기 - token required",
     description="펀딩 제품의 가격을 결제 합니다",
     response={200: PayFundingResponse},
     auth=FavorItAuth(),
@@ -97,7 +97,7 @@ def pay_funding(request, request_body: PayFundingRequestBody, funding_id: int = 
 @funding_router.post(
     path="/funding/options/bank",
     url_name="bank_option_list",
-    summary="은행 옵션 리스트 - need access token in header",
+    summary="은행 옵션 리스트 - token required",
     description="은행 옵션 리스트를 리턴 합니다",
     response={200: list[BankOptionListResponse]},
     auth=FavorItAuth(),
@@ -109,7 +109,7 @@ def retrieve_bank_option_list(request):
 @funding_router.post(
     path="/funding/verification/bank-account",
     url_name="verification_bank_account",
-    summary="예금계좌 조회 - need access token in header",
+    summary="예금계좌 조회 - token required",
     description="예금계좌를 조회 합니다",
     response={200: VerifyBankAccountResponse},
     auth=FavorItAuth(),
@@ -123,7 +123,7 @@ def verify_bank_account(request, request_body: VerifyBankAccountRequestBody):
 @funding_router.post(
     path="/funding/{funding_id}/payment",
     url_name="payment_funding",
-    summary="펀딩 정산 - need access token in header",
+    summary="펀딩 정산 - token required",
     description="펀딩된 금액을 정산 받습니다",
     response={200: PaymentFundingResponse},
     auth=FavorItAuth(),
