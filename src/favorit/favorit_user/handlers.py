@@ -28,8 +28,10 @@ def handle_login(request_body: LoginRequest) -> dict[str, str]:
 def handle_refresh_token(request_body: RefreshTokenRequest) -> dict[str, str]:
     try:
         decoded = jwt.decode(request_body.refresh_token, settings.SECRET_KEY, ["HS256"])
-    except (DecodeError, exceptions.ExpiredSignatureError):
+    except DecodeError:
         raise HttpError(status_code=HTTPStatus.UNAUTHORIZED, message="refresh token 형태가 올바르지 않습니다.")
+    except exceptions.ExpiredSignatureError:
+        raise HttpError(status_code=HTTPStatus.UNAUTHORIZED, message="refresh token이 만료 되었습니다.")
     else:
         token_type = decoded["token_type"]
         favorit_user_id = decoded["user_id"]
