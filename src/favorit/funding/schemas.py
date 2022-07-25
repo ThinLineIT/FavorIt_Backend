@@ -151,10 +151,9 @@ class VerifyBankAccountResponse(Schema):
 
 class PaymentFundingRequest(Schema):
     funding_id: int
-    full_name: str
     bank_code: BankEnum
+    full_name: str
     account_number: str
-    price: int
 
 
 class PaymentFundingResponse(CommonResponse):

@@ -76,4 +76,5 @@ def handle_payment_funding(request_auth, request_body: PaymentFundingRequest):
 
     funding.state = FundingState.COMPLETED
     funding.save()
-    FundingPaymentResult.objects.create(**request_body.dict())
+    funding_amount = FundingAmount.objects.get(funding=funding)
+    FundingPaymentResult.objects.create(price=funding_amount.amount, **request_body.dict())
