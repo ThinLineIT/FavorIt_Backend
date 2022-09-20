@@ -119,6 +119,11 @@ class PayFundingResponse(Schema):
     message: str = Field(description="고객에게 노출이 필요한 메세지", default="")
 
 
+class PayFundingResponseV2(Schema):
+    data: PayFundingResponseSchemaV2
+    message: str = Field(description="고객에게 노출이 필요한 메세지", default="")
+
+
 class BankOptionListResponse(Schema):
     text: str
     value: str
