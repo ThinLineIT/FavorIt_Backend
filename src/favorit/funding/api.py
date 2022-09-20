@@ -114,7 +114,7 @@ def pay_funding(request, request_body: PayFundingRequestBody, funding_id: int = 
     url_name="pay_funding1",
     summary="선물 하기(multipart form) - token required",
     description="펀딩 제품의 가격을 결제 합니다",
-    response={200: PayFundingResponse},
+    response={200: PayFundingResponseV2},
     auth=FavorItAuth(),
 )
 def pay_funding(request, request_body: PayFundingRequestBody= Form(...), image: UploadedFile = File(...), funding_id: int = Path(...)):
