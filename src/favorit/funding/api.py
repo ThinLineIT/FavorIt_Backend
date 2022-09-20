@@ -73,6 +73,7 @@ def create_funding(request, request_body: CreateFundingRequestBody = Form(...), 
     auth=FavorItAuthWithNoMember(),
 )
 def retrieve_funding_detail(request, funding_id: int = Path(...)):
+    # TODO: token required 하게 수정 필요
     if payload := request.auth:
         user_id = payload["user_id"]
     else:
