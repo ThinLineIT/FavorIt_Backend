@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from ninja import Path, Router
+from ninja import Path, Router, Form, UploadedFile, File
 
 from favorit.funding.enums import BankEnum
 from favorit.funding.handlers import (
@@ -46,6 +46,21 @@ def create_funding(request, request_body: CreateFundingRequestBody):
     user_id = request.auth["user_id"]
     return HTTPStatus.CREATED, CreateFundingResponse(
         data=CreatingFundingResponseSchema(**handle_create_funding(request_body, user_id))
+    )
+
+
+@funding_router.post(
+    path="/v2/funding",
+    url_name="create_funding1",
+    summary="펀딩 생성(multipart form) - token required",
+    description="펀딩을 생성 합니다",
+    response={201: CreateFundingResponse, 400: CreateFunding400ErrorResponse},
+    auth=FavorItAuth(),
+)
+def create_funding(request, request_body: CreateFundingRequestBody = Form(...), image: UploadedFile = File(...)):
+    user_id = request.auth["user_id"]
+    return HTTPStatus.CREATED, CreateFundingResponse(
+        data=CreatingFundingResponseSchema(**handle_create_funding_v2(request_body, user_id, image))
     )
 
 

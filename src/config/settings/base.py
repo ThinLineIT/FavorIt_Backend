@@ -143,3 +143,7 @@ DEFAULT_DATE_FORMAT = "%Y-%m-%d"
 
 S3_BUCKET = env.str("BUCKET", default="s3-favorit-dev")
 S3_BASE_URL = env.str("S3_BASE_URL", default="s3.ap-northeast-2.amazonaws.com")
+
+S3_AWS_ACCESS_KEY_ID = env.str("AWS_ACCESS_KEY_ID", default="")
+S3_AWS_SECRET_ACCESS_KEY = env.str("AWS_SECRET_ACCESS_KEY", default="")
+S3_AWS_REGION = env.str("AWS_REGION", default="")

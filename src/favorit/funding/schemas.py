@@ -18,19 +18,19 @@ class CreateFundingRequestBody(Schema):
     due_date: date = Field(description="펀딩 만료 기한")
     product: Product = Field(description="펀딩 제품")
 
-    class Config:
-        schema_extra = {
-            "example": {
-                "name": "윤권이의 생일선물은 아이패드로 부탁해",
-                "contents": "궈니는 아이패드가 참 좋더라",
-                "due_date": "2022-09-03",
-                "product": {
-                    "link": "https://www.apple.com/kr/shop/buy-ipad/ipad-air",
-                    "option": "WIFI에 색상은 금색 256GB",
-                    "price": 779000,
-                },
-            }
-        }
+    # class Config:
+    #     schema_extra = {
+    #         "example": {
+    #             "name": "윤권이의 생일선물은 아이패드로 부탁해",
+    #             "contents": "궈니는 아이패드가 참 좋더라",
+    #             "due_date": "2022-09-03",
+    #             "product": {
+    #                 "link": "https://www.apple.com/kr/shop/buy-ipad/ipad-air",
+    #                 "option": "WIFI에 색상은 금색 256GB",
+    #                 "price": 779000,
+    #             },
+    #         }
+    #     }
 
 
 class CreatingFundingResponseSchema(Schema):

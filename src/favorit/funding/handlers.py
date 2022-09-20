@@ -13,11 +13,22 @@ from favorit.funding.schemas import (
     VerifyBankAccountRequestBody,
 )
 from favorit.funding.services import FundingCreator
+from favorit.integration.s3.client import S3Client
 
 
 def handle_create_funding(request_body: CreateFundingRequestBody, user_id) -> dict[str, Any]:
     funding_creator = FundingCreator(request_body=request_body, user_id=user_id)
     funding: Funding = funding_creator.create()
+    return {"funding_id": funding.id, "link_for_sharing": f"{settings.BASE_URL}/funding/{funding.id}"}
+
+
+def handle_create_funding_v2(request_body: CreateFundingRequestBody, user_id, image) -> dict[str, Any]:
+    funding_creator = FundingCreator(request_body=request_body, user_id=user_id)
+    funding: Funding = funding_creator.create()
+
+    s3_client = S3Client()
+    s3_client.upload_file_object(image_data=image, bucket_path=f"funding/{funding.id}", content_type=image.content_type)
+
     return {"funding_id": funding.id, "link_for_sharing": f"{settings.BASE_URL}/funding/{funding.id}"}
 
 
