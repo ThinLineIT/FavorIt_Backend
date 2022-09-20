@@ -33,12 +33,15 @@ def handle_create_funding_v2(request_body: CreateFundingRequestBody, user_id, im
 
 
 def handle_retrieve_funding_detail(funding_id: int, user_id: Optional[int]) -> dict[str, Any]:
+    # TODO: 여기에서 funding_id와 user_id를 통해서, maker와 방문한 user_id의 관계를 나타내는 테이블을 하나를 만들어서 저장해야한다
     funding = Funding.objects.filter(id=funding_id).first()
     if funding is None:
         raise HttpError(status_code=HTTPStatus.BAD_REQUEST, message="펀딩이 존재 하지 않습니다.")
 
     funding_amount = FundingAmount.objects.filter(funding=funding).first()
     amount = funding_amount and funding_amount.amount
+
+    # TODO: 응답 값에 funding_id 기준의 image link가 있어야 한다
     return {
         "name": funding.name,
         "contents": funding.contents,

@@ -160,3 +160,6 @@ def verify_bank_account(request, request_body: VerifyBankAccountRequestBody):
 def payment_funding(request, request_body: PaymentFundingRequest):
     handle_payment_funding(request.auth, request_body)
     return HTTPStatus.OK, PaymentFundingResponse(data="")
+
+
+# TODO: 펀딩 목록 API 만들어야 함 -> 내 user_id로 내 펀딩과, 내 친구들(나를 방문한 사람)의 펀딩의 리스트를 만들어서 내려줘야 한
