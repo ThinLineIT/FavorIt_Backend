@@ -108,6 +108,12 @@ class PayFundingResponseSchema(Schema):
     link_for_sharing: str
 
 
+class PayFundingResponseSchemaV2(Schema):
+    funding_id: int
+    link_for_sharing: str
+    link_for_uploaded: str
+
+
 class PayFundingResponse(Schema):
     data: PayFundingResponseSchema
     message: str = Field(description="고객에게 노출이 필요한 메세지", default="")

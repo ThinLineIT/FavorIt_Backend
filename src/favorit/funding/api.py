@@ -27,7 +27,7 @@ from favorit.funding.schemas import (
     RetrievingFundingDetailResponse,
     VerifyBankAccountRequestBody,
     VerifyBankAccountResponse,
-    VerifyBankAccountResponseSchema,
+    VerifyBankAccountResponseSchema, PayFundingResponseSchemaV2,
 )
 from favorit.integration.auth.authentication import FavorItAuth, FavorItAuthWithNoMember
 
@@ -119,7 +119,7 @@ def pay_funding(request, request_body: PayFundingRequestBody, funding_id: int = 
 )
 def pay_funding(request, request_body: PayFundingRequestBody= Form(...), image: UploadedFile = File(...), funding_id: int = Path(...)):
     return HTTPStatus.OK, PayFundingResponse(
-        data=PayFundingResponseSchema(**handle_pay_funding_v2(funding_id, request_body, image))
+        data=PayFundingResponseSchemaV2(**handle_pay_funding_v2(funding_id, request_body, image))
     )
 
 
