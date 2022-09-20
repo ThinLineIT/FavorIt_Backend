@@ -90,8 +90,8 @@ class CloseFundingResponse(CommonResponse):
 
 class PayFundingRequestBody(Schema):
     amount: int = Field(description="선물하기 결제 금액")
-    from_: str = Field(description="보내는 사람 이름")
-    to: str = Field(description="받는 사람 이름")
+    from_name: str = Field(description="보내는 사람 이름")
+    to_name: str = Field(description="받는 사람 이름")
     contents: str = Field(description="내용")
 
     # class Config:

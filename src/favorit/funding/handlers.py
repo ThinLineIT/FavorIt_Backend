@@ -73,7 +73,7 @@ def handle_pay_funding(funding_id: int, request_body: PayFundingRequestBody):
 
 def handle_pay_funding_v2(funding_id: int, request_body: PayFundingRequestBody, image):
     funding = Funding.objects.filter(id=funding_id).first()
-    funding_amount = FundingAmount.objects.create(funding=funding, amount=request_body.amount, from_=request_body.from_, to=request_body.to, contents=request_body.contents)
+    funding_amount = FundingAmount.objects.create(funding=funding, amount=request_body.amount, from_=request_body.from_name, to=request_body.to_name, contents=request_body.contents)
 
     s3_client = S3Client()
     s3_client.upload_file_object(image_data=image, bucket_path=f"presents/{funding_amount.id}", content_type=image.content_type)
