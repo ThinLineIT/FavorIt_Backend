@@ -8,7 +8,6 @@ from favorit.funding.enums import BankEnum, FundingState
 
 class Product(Schema):
     link: str = Field(description="제품 링크")
-    option: str = Field(description="제품 옵션")
     price: int = Field(description="제품 가격")
 
 

@@ -49,11 +49,9 @@ class FundingPresent(CommonTimestamp):
     funding_amount = models.ForeignKey("FundingAmount", on_delete=models.DO_NOTHING, help_text="펀딩 생성자")
 
 
-
 class Product(CommonTimestamp):
     link = models.CharField(max_length=500, help_text="제품 링크")
     price = models.IntegerField(help_text="제품 가격")
-    option = models.TextField(help_text="제품 옵션")
 
 
 class FundingPaymentResult(CommonTimestamp):
