@@ -9,7 +9,7 @@ from favorit.funding.handlers import (
     handle_pay_funding,
     handle_payment_funding,
     handle_retrieve_funding_detail,
-    handle_verify_bank_account,
+    handle_verify_bank_account, handle_pay_funding_v2,
 )
 from favorit.funding.schemas import (
     BankOptionListResponse,
@@ -106,6 +106,20 @@ def close_funding(request, funding_id: int = Path(...)):
 def pay_funding(request, request_body: PayFundingRequestBody, funding_id: int = Path(...)):
     return HTTPStatus.OK, PayFundingResponse(
         data=PayFundingResponseSchema(**handle_pay_funding(funding_id, request_body))
+    )
+
+
+@funding_router.post(
+    path="/v2/funding/{funding_id}/present",
+    url_name="pay_funding",
+    summary="선물 하기(multipart form) - token required",
+    description="펀딩 제품의 가격을 결제 합니다",
+    response={200: PayFundingResponse},
+    auth=FavorItAuth(),
+)
+def pay_funding(request, request_body: PayFundingRequestBody= Form(...), image: UploadedFile = File(...), funding_id: int = Path(...)):
+    return HTTPStatus.OK, PayFundingResponse(
+        data=PayFundingResponseSchema(**handle_pay_funding_v2(funding_id, request_body, image))
     )
 
 

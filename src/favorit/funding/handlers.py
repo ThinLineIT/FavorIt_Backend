@@ -71,6 +71,20 @@ def handle_pay_funding(funding_id: int, request_body: PayFundingRequestBody):
     return {"funding_id": funding.id, "link_for_sharing": f"{settings.BASE_URL}/funding/{funding.id}"}
 
 
+def handle_pay_funding_v2(funding_id: int, request_body: PayFundingRequestBody, image):
+    funding = Funding.objects.filter(id=funding_id).first()
+    funding_amount = FundingAmount.objects.create(funding=funding, amount=request_body.amount, from_=request_body.from_, to=request_body.to, contents=request_body.contents)
+
+    s3_client = S3Client()
+    s3_client.upload_file_object(image_data=image, bucket_path=f"presents/{funding_amount.id}", content_type=image.content_type)
+
+    return {
+        "funding_id": funding.id,
+        "link_for_sharing": f"{settings.BASE_URL}/funding/{funding.id}",
+        "link_for_uploaded": f"{settings.S3_BASE_URL}/presents/{funding_amount.id}"
+    }
+
+
 def handle_verify_bank_account(request_body: VerifyBankAccountRequestBody):
     if request_body.account_number != "91011112222":
         raise HttpError(HTTPStatus.BAD_REQUEST, "존재하지 않는 계좌번호입니다.")
