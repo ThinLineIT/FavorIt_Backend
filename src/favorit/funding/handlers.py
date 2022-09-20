@@ -50,7 +50,6 @@ def handle_retrieve_funding_detail(funding_id: int, user_id: Optional[int]) -> d
         "link_for_sharing": f"{settings.BASE_URL}/funding/{funding.id}",
         "product": {
             "link": funding.product.link,
-            "option": funding.product.option,
             "price": funding.product.price,
         },
     }

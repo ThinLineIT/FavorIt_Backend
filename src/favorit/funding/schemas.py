@@ -75,7 +75,6 @@ class RetrievingFundingDetailResponse(Schema):
                     "link_for_sharing": "https://www.favorit.com/funding/1001",
                     "product": {
                         "link": "https://www.apple.com/kr/shop/buy-ipad/ipad-air",
-                        "option": "WIFI에 색상은 금색 256GB",
                         "price": 779000,
                     },
                 },
