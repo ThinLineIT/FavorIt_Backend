@@ -45,8 +45,8 @@ def handle_retrieve_funding_detail(funding_id: int, user_id: Optional[int]) -> d
     if funding is None:
         raise HttpError(status_code=HTTPStatus.BAD_REQUEST, message="펀딩이 존재 하지 않습니다.")
 
-    user = FavorItUser.objects.get(user_id)
-    if funding.maker.id not in user.friends.values_list("id", flat=True):
+    user = FavorItUser.objects.get(id=user_id)
+    if user_id != funding.maker.id and funding.maker.id not in user.friends.values_list("id", flat=True):
         user.friends.add(funding.maker.id)
 
     funding_amount = FundingAmount.objects.filter(funding=funding).first()
