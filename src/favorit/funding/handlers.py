@@ -1,3 +1,4 @@
+from datetime import datetime
 from http import HTTPStatus
 from typing import Any, Optional
 
@@ -132,7 +133,7 @@ def handle_funding_list(user_id: int):
         FundingInfo(
             funding_id=funding.id,
             name=funding.name,
-            due_date=funding.due_date,
+            due_date=datetime.strftime(funding.due_date, settings.DEFAULT_DATE_FORMAT),
             image=f"{settings.S3_BASE_URL}/funding/{funding.id}",
         )
         for funding in my_all_fundings
@@ -146,7 +147,7 @@ def handle_funding_list(user_id: int):
                 FundingInfo(
                     funding_id=funding.id,
                     name=funding.name,
-                    due_date=funding.due_date,
+                    due_date=datetime.strftime(funding.due_date, settings.DEFAULT_DATE_FORMAT),
                     image=f"{settings.S3_BASE_URL}/funding/{funding.id}",
                 )
             )
