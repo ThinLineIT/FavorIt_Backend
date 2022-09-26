@@ -55,7 +55,7 @@ def handle_retrieve_funding_detail(funding_id: int, user_id: int) -> dict[str, A
         "is_maker": user_id == funding.maker.id if user_id else False,
         "creation_date": funding.creation_date_format,
         "due_date": funding.due_date,
-        "progress_percent": funding.progress_percent(all_amount["amount"]),
+        "progress_percent": funding.progress_percent(all_amount["amount"] or 0),
         "link_for_sharing": f"{settings.BASE_URL}/funding/{funding.id}",
         "product": {
             "link": funding.product.link,
