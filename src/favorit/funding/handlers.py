@@ -42,8 +42,8 @@ def handle_retrieve_funding_detail(funding_id: int, user_id: int) -> dict[str, A
         raise HttpError(status_code=HTTPStatus.BAD_REQUEST, message="펀딩이 존재 하지 않습니다.")
 
     user = FavorItUser.objects.get(id=user_id)
-    if user_id != funding.maker.id and funding.maker.id not in user.friends.values_list("id", flat=True):
-        user.friends.add(funding.maker.id)
+    if user_id != funding.maker.id:
+        user.visited_fundings.add(funding.id)
 
     all_amount = (
         FundingAmount.objects.filter(funding=funding).aggregate(amount=Sum("amount"))
@@ -139,19 +139,15 @@ def handle_funding_list(user_id: int):
         )
         for funding in my_all_fundings
     ]
-
-    friends_fundings = []
-    for friend in me.friends.all():
-        friend_all_fundings = Funding.objects.select_related("maker", "product").filter(maker=friend)
-        for funding in friend_all_fundings:
-            friends_fundings.append(
-                FundingInfo(
-                    funding_id=funding.id,
-                    name=funding.name,
-                    due_date=datetime.strftime(funding.due_date, settings.DEFAULT_DATE_FORMAT),
-                    image=f"{settings.S3_BASE_URL}/funding/{funding.id}",
-                )
-            )
+    friends_fundings = [
+        FundingInfo(
+            funding_id=visited_funding.id,
+            name=visited_funding.name,
+            due_date=datetime.strftime(visited_funding.due_date, settings.DEFAULT_DATE_FORMAT),
+            image=f"{settings.S3_BASE_URL}/funding/{visited_funding.id}",
+        )
+        for visited_funding in me.visited_fundings.all()
+    ]
     return {
         "my_fundings": my_fundings,
         "friends_fundings": friends_fundings,
