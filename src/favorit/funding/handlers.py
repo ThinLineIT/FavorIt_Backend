@@ -1,8 +1,9 @@
 from datetime import datetime
 from http import HTTPStatus
-from typing import Any, Optional
+from typing import Any
 
 from django.conf import settings
+from django.db.models import Sum
 from ninja.errors import HttpError
 
 from favorit.favorit_user.models import FavorItUser
@@ -44,9 +45,9 @@ def handle_retrieve_funding_detail(funding_id: int, user_id: int) -> dict[str, A
     if user_id != funding.maker.id and funding.maker.id not in user.friends.values_list("id", flat=True):
         user.friends.add(funding.maker.id)
 
-    funding_amount = FundingAmount.objects.filter(funding=funding).first()
-    amount = funding_amount and funding_amount.amount
-
+    all_amount = (
+        FundingAmount.objects.filter(funding=funding).aggregate(amount=Sum("amount"))
+    )
     return {
         "name": funding.name,
         "contents": funding.contents,
@@ -54,7 +55,7 @@ def handle_retrieve_funding_detail(funding_id: int, user_id: int) -> dict[str, A
         "is_maker": user_id == funding.maker.id if user_id else False,
         "creation_date": funding.creation_date_format,
         "due_date": funding.due_date,
-        "progress_percent": funding.progress_percent(amount or 0),
+        "progress_percent": funding.progress_percent(all_amount["amount"]),
         "link_for_sharing": f"{settings.BASE_URL}/funding/{funding.id}",
         "product": {
             "link": funding.product.link,
