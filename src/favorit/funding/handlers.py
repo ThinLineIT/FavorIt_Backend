@@ -4,6 +4,7 @@ from typing import Any, Optional
 from django.conf import settings
 from ninja.errors import HttpError
 
+from favorit.favorit_user.models import FavorItUser
 from favorit.funding.enums import FundingState
 from favorit.funding.models import Funding, FundingAmount, FundingPaymentResult
 from favorit.funding.schemas import (
@@ -34,9 +35,19 @@ def handle_create_funding_v2(request_body: CreateFundingRequestBody, user_id, im
 
 def handle_retrieve_funding_detail(funding_id: int, user_id: Optional[int]) -> dict[str, Any]:
     # TODO: 여기에서 funding_id와 user_id를 통해서, maker와 방문한 user_id의 관계를 나타내는 테이블을 하나를 만들어서 저장해야한다
+    """
+    1. user_id가 funding_id에 접근한 형태임
+    2. user_id의 친구 목록에 funding_id의 maker가 있는지 확인
+    ---> 있으면, pass
+    ---> 없으면, 친구로 추가
+    """
     funding = Funding.objects.filter(id=funding_id).first()
     if funding is None:
         raise HttpError(status_code=HTTPStatus.BAD_REQUEST, message="펀딩이 존재 하지 않습니다.")
+
+    user = FavorItUser.objects.get(user_id)
+    if funding.maker.id not in user.friends.values_list("id", flat=True):
+        user.friends.add(funding.maker.id)
 
     funding_amount = FundingAmount.objects.filter(funding=funding).first()
     amount = funding_amount and funding_amount.amount
@@ -75,7 +86,7 @@ def handle_pay_funding(funding_id: int, request_body: PayFundingRequestBody):
 
 def handle_pay_funding_v2(funding_id: int, request_body: PayFundingRequestBody, image):
     funding = Funding.objects.filter(id=funding_id).first()
-    funding_amount = FundingAmount.objects.create(funding=funding, amount=request_body.amount, from_=request_body.from_name, to=request_body.to_name, contents=request_body.contents)
+    funding_amount = FundingAmount.objects.create(funding=funding, amount=request_body.amount, from_name=request_body.from_name, to_name=request_body.to_name, contents=request_body.contents)
 
     s3_client = S3Client()
     s3_client.upload_file_object(image_data=image, bucket_path=f"presents/{funding_amount.id}", content_type=image.content_type)

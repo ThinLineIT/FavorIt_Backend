@@ -36,8 +36,8 @@ class Funding(CommonTimestamp):
 class FundingAmount(CommonTimestamp):
     funding = models.ForeignKey("Funding", on_delete=models.DO_NOTHING, help_text="펀딩 ID")
     amount = models.PositiveBigIntegerField(help_text="펀딩 모금 금액", default=0)
-    from_ = models.CharField(max_length=20, help_text="보내는 사람 이름")
-    to = models.CharField(max_length=20, help_text="받는 사람 이름")
+    from_name = models.CharField(max_length=20, help_text="보내는 사람 이름")
+    to_name = models.CharField(max_length=20, help_text="받는 사람 이름")
     contents = models.TextField(help_text="선물하기 내용")
 
     def add_amount(self, amount):
