@@ -26,6 +26,8 @@ class Funding(CommonTimestamp):
         return datetime.strftime(self.created_at, settings.DEFAULT_DATE_FORMAT)
 
     def progress_percent(self, total_amount) -> int:
+        if self.product.price == 0:
+            return 0
         return int((total_amount / self.product.price) * 100)
 
     def change_state(self, state: FundingState):
