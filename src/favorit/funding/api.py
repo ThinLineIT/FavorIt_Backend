@@ -9,7 +9,10 @@ from favorit.funding.handlers import (
     handle_pay_funding,
     handle_payment_funding,
     handle_retrieve_funding_detail,
-    handle_verify_bank_account, handle_pay_funding_v2, handle_create_funding_v2,
+    handle_verify_bank_account,
+    handle_pay_funding_v2,
+    handle_create_funding_v2,
+    handle_funding_list,
 )
 from favorit.funding.schemas import (
     BankOptionListResponse,
@@ -27,7 +30,11 @@ from favorit.funding.schemas import (
     RetrievingFundingDetailResponse,
     VerifyBankAccountRequestBody,
     VerifyBankAccountResponse,
-    VerifyBankAccountResponseSchema, PayFundingResponseSchemaV2, PayFundingResponseV2,
+    VerifyBankAccountResponseSchema,
+    PayFundingResponseSchemaV2,
+    PayFundingResponseV2,
+    FundingListResponse,
+    FundingListResponseSchema,
 )
 from favorit.integration.auth.authentication import FavorItAuth, FavorItAuthWithNoMember
 
@@ -118,13 +125,18 @@ def pay_funding(request, request_body: PayFundingRequestBody, funding_id: int = 
     response={200: PayFundingResponseV2},
     auth=FavorItAuth(),
 )
-def pay_funding(request, request_body: PayFundingRequestBody= Form(...), image: UploadedFile = File(...), funding_id: int = Path(...)):
+def pay_funding(
+    request,
+    request_body: PayFundingRequestBody = Form(...),
+    image: UploadedFile = File(...),
+    funding_id: int = Path(...),
+):
     return HTTPStatus.OK, PayFundingResponseV2(
         data=PayFundingResponseSchemaV2(**handle_pay_funding_v2(funding_id, request_body, image))
     )
 
 
-@funding_router.post(
+@funding_router.get(
     path="/funding/options/bank",
     url_name="bank_option_list",
     summary="은행 옵션 리스트 - token required",
@@ -164,3 +176,16 @@ def payment_funding(request, request_body: PaymentFundingRequest):
 
 
 # TODO: 펀딩 목록 API 만들어야 함 -> 내 user_id로 내 펀딩과, 내 친구들(나를 방문한 사람)의 펀딩의 리스트를 만들어서 내려줘야 한
+
+
+@funding_router.get(
+    path="/fundings",
+    url_name="funding_list",
+    summary="펀딩 목록",
+    description="펀딩 목록을 호출 합니다",
+    response={200: FundingListResponse},
+    auth=FavorItAuth(),
+)
+def retrieve_funding_list(request):
+    user_id = request.auth["user_id"]
+    return HTTPStatus.OK, FundingListResponse(data=FundingListResponseSchema(**handle_funding_list(user_id)))

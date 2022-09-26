@@ -137,6 +137,48 @@ class BankOptionListResponse(Schema):
         }
 
 
+class FundingInfo(Schema):
+    funding_id: int
+    name: str
+    due_date: str
+    image: str
+
+
+class FundingListResponseSchema(Schema):
+    my_fundings: list[FundingInfo]
+    friends_fundings: list[FundingInfo]
+
+
+class FundingListResponse(Schema):
+    data: FundingListResponseSchema
+    message: str = Field(description="고객에게 노출이 필요한 메세지", default="")
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "data": {
+                    "my_fundings": [
+                        {
+                            "funding_id": 0,
+                            "name": "윤권이의 생일선물은 아이패드로 부탁해",
+                            "due_date": "2022-09-03",
+                            "image": "s3-image-link",
+                        }
+                    ],
+                    "friends_fundings": [
+                        {
+                            "funding_id": 1,
+                            "name": "정빈이의 생일선물은 갤럭시탭으로 부탁해",
+                            "due_date": "2022-09-17",
+                            "image": "s3-image-link",
+                        }
+                    ],
+                },
+                "message": "",
+            }
+        }
+
+
 class VerifyBankAccountRequestBody(Schema):
     bank_code: BankEnum
     account_number: str

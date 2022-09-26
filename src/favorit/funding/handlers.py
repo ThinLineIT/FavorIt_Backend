@@ -12,6 +12,7 @@ from favorit.funding.schemas import (
     PayFundingRequestBody,
     PaymentFundingRequest,
     VerifyBankAccountRequestBody,
+    FundingInfo,
 )
 from favorit.funding.services import FundingCreator
 from favorit.integration.s3.client import S3Client
@@ -34,13 +35,6 @@ def handle_create_funding_v2(request_body: CreateFundingRequestBody, user_id, im
 
 
 def handle_retrieve_funding_detail(funding_id: int, user_id: Optional[int]) -> dict[str, Any]:
-    # TODO: 여기에서 funding_id와 user_id를 통해서, maker와 방문한 user_id의 관계를 나타내는 테이블을 하나를 만들어서 저장해야한다
-    """
-    1. user_id가 funding_id에 접근한 형태임
-    2. user_id의 친구 목록에 funding_id의 maker가 있는지 확인
-    ---> 있으면, pass
-    ---> 없으면, 친구로 추가
-    """
     funding = Funding.objects.filter(id=funding_id).first()
     if funding is None:
         raise HttpError(status_code=HTTPStatus.BAD_REQUEST, message="펀딩이 존재 하지 않습니다.")
@@ -65,7 +59,7 @@ def handle_retrieve_funding_detail(funding_id: int, user_id: Optional[int]) -> d
             "link": funding.product.link,
             "price": funding.product.price,
         },
-        "image": f"{settings.S3_BASE_URL}/funding/{funding.id}"
+        "image": f"{settings.S3_BASE_URL}/funding/{funding.id}",
     }
 
 
@@ -86,15 +80,23 @@ def handle_pay_funding(funding_id: int, request_body: PayFundingRequestBody):
 
 def handle_pay_funding_v2(funding_id: int, request_body: PayFundingRequestBody, image):
     funding = Funding.objects.filter(id=funding_id).first()
-    funding_amount = FundingAmount.objects.create(funding=funding, amount=request_body.amount, from_name=request_body.from_name, to_name=request_body.to_name, contents=request_body.contents)
+    funding_amount = FundingAmount.objects.create(
+        funding=funding,
+        amount=request_body.amount,
+        from_name=request_body.from_name,
+        to_name=request_body.to_name,
+        contents=request_body.contents,
+    )
 
     s3_client = S3Client()
-    s3_client.upload_file_object(image_data=image, bucket_path=f"presents/{funding_amount.id}", content_type=image.content_type)
+    s3_client.upload_file_object(
+        image_data=image, bucket_path=f"presents/{funding_amount.id}", content_type=image.content_type
+    )
 
     return {
         "funding_id": funding.id,
         "link_for_sharing": f"{settings.BASE_URL}/funding/{funding.id}",
-        "link_for_uploaded": f"{settings.S3_BASE_URL}/presents/{funding_amount.id}"
+        "link_for_uploaded": f"{settings.S3_BASE_URL}/presents/{funding_amount.id}",
     }
 
 
@@ -120,3 +122,35 @@ def handle_payment_funding(request_auth, request_body: PaymentFundingRequest):
     else:
         price = 0
     FundingPaymentResult.objects.create(price=price, **request_body.dict())
+
+
+def handle_funding_list(user_id: int):
+    me = FavorItUser.objects.prefetch_related("friends").get(id=user_id)
+
+    my_all_fundings = Funding.objects.select_related("maker", "product").filter(maker=me)
+    my_fundings = [
+        FundingInfo(
+            funding_id=funding.id,
+            name=funding.name,
+            due_date=funding.due_date,
+            image=f"{settings.S3_BASE_URL}/funding/{funding.id}",
+        )
+        for funding in my_all_fundings
+    ]
+
+    friends_fundings = []
+    for friend in me.friends.all():
+        friend_all_fundings = Funding.objects.select_related("maker", "product").filter(maker=friend)
+        for funding in friend_all_fundings:
+            friends_fundings.append(
+                FundingInfo(
+                    funding_id=funding.id,
+                    name=funding.name,
+                    due_date=funding.due_date,
+                    image=f"{settings.S3_BASE_URL}/funding/{funding.id}",
+                )
+            )
+    return {
+        "my_fundings": my_fundings,
+        "friends_fundings": friends_fundings,
+    }
