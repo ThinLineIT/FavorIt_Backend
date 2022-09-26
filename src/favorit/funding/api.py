@@ -36,7 +36,7 @@ from favorit.funding.schemas import (
     FundingListResponse,
     FundingListResponseSchema,
 )
-from favorit.integration.auth.authentication import FavorItAuth, FavorItAuthWithNoMember
+from favorit.integration.auth.authentication import FavorItAuth
 
 funding_router = Router(tags=["Funding"])
 
@@ -77,14 +77,10 @@ def create_funding(request, request_body: CreateFundingRequestBody = Form(...), 
     summary="펀딩 상세 - token optional",
     description="펀딩상세 정보를 보여줍니다 - 회원의 경우에는 token이 필요하고, 비회원의 경우는 token이 필요하지 않습니다",
     response={200: RetrievingFundingDetailResponse},
-    auth=FavorItAuthWithNoMember(),
+    auth=FavorItAuth(),
 )
 def retrieve_funding_detail(request, funding_id: int = Path(...)):
-    # TODO: token required 하게 수정 필요
-    if payload := request.auth:
-        user_id = payload["user_id"]
-    else:
-        user_id = None
+    user_id = request.auth["user_id"]
     return HTTPStatus.OK, RetrievingFundingDetailResponse(
         data=FundingDetailResponseSchema(**handle_retrieve_funding_detail(funding_id, user_id))
     )

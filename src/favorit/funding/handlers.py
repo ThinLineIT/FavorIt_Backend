@@ -35,7 +35,7 @@ def handle_create_funding_v2(request_body: CreateFundingRequestBody, user_id, im
     return {"funding_id": funding.id, "link_for_sharing": f"{settings.BASE_URL}/funding/{funding.id}"}
 
 
-def handle_retrieve_funding_detail(funding_id: int, user_id: Optional[int]) -> dict[str, Any]:
+def handle_retrieve_funding_detail(funding_id: int, user_id: int) -> dict[str, Any]:
     funding = Funding.objects.filter(id=funding_id).first()
     if funding is None:
         raise HttpError(status_code=HTTPStatus.BAD_REQUEST, message="펀딩이 존재 하지 않습니다.")
