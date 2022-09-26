@@ -41,7 +41,6 @@ def handle_retrieve_funding_detail(funding_id: int, user_id: Optional[int]) -> d
     funding_amount = FundingAmount.objects.filter(funding=funding).first()
     amount = funding_amount and funding_amount.amount
 
-    # TODO: 응답 값에 funding_id 기준의 image link가 있어야 한다
     return {
         "name": funding.name,
         "contents": funding.contents,
@@ -55,6 +54,7 @@ def handle_retrieve_funding_detail(funding_id: int, user_id: Optional[int]) -> d
             "link": funding.product.link,
             "price": funding.product.price,
         },
+        "image": f"{settings.S3_BASE_URL}/funding/{funding.id}"
     }
 
 
