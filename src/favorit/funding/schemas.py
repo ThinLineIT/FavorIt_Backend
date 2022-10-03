@@ -190,22 +190,22 @@ class FundingPresentsListResponse(Schema):
     data: list[FundingPresentsListResponseSchema]
     message: str = Field(description="고객에게 노출이 필요한 메세지", default="")
 
-    class Config:
-        schema_extra = {
-            "example": {
-                {
-                    "data": [
-                        {
-                            "name": "신윤권",
-                            "message": "너를 향한 나의 마음이야",
-                            "ammount": "300000",
-                            "image": "s3-image-link",
-                        }
-                    ],
-                    "message": "",
-                }
-            }
-        }
+    # class Config:
+    #     schema_extra = {
+    #         "example": {
+    #             {
+    #                 "data": [
+    #                     {
+    #                         "name": "신윤권",
+    #                         "message": "너를 향한 나의 마음이야",
+    #                         "ammount": "300000",
+    #                         "image": "s3-image-link",
+    #                     }
+    #                 ],
+    #                 "message": "",
+    #             }
+    #         }
+    #     }
 
 
 class VerifyBankAccountRequestBody(Schema):
