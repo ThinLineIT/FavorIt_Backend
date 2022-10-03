@@ -12,7 +12,7 @@ from favorit.funding.handlers import (
     handle_verify_bank_account,
     handle_pay_funding_v2,
     handle_create_funding_v2,
-    handle_funding_list,
+    handle_funding_list, handle_funding_presents_list,
 )
 from favorit.funding.schemas import (
     BankOptionListResponse,
@@ -35,6 +35,8 @@ from favorit.funding.schemas import (
     PayFundingResponseV2,
     FundingListResponse,
     FundingListResponseSchema,
+    FundingPresentsListResponse,
+    FundingPresentsListResponseSchema,
 )
 from favorit.integration.auth.authentication import FavorItAuth
 
@@ -185,3 +187,15 @@ def payment_funding(request, request_body: PaymentFundingRequest):
 def retrieve_funding_list(request):
     user_id = request.auth["user_id"]
     return HTTPStatus.OK, FundingListResponse(data=FundingListResponseSchema(**handle_funding_list(user_id)))
+
+
+@funding_router.get(
+    path="/funding/{funding_id}/presents",
+    url_name="funding_presents_list",
+    summary="펀딩 선물 목록",
+    description="펀딩 선물 목록을 리턴 합니다",
+    response={200: FundingPresentsListResponse},
+    auth=FavorItAuth(),
+)
+def retrieve_funding_presents_list(request, funding_id: int = Path(...)):
+    return HTTPStatus.OK, FundingPresentsListResponse(data=handle_funding_presents_list(funding_id))

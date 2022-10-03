@@ -14,7 +14,7 @@ from favorit.funding.schemas import (
     PayFundingRequestBody,
     PaymentFundingRequest,
     VerifyBankAccountRequestBody,
-    FundingInfo,
+    FundingInfo, FundingPresentsListResponseSchema,
 )
 from favorit.funding.services import FundingCreator
 from favorit.integration.s3.client import S3Client
@@ -45,9 +45,7 @@ def handle_retrieve_funding_detail(funding_id: int, user_id: int) -> dict[str, A
     if user_id != funding.maker.id:
         user.visited_fundings.add(funding.id)
 
-    all_amount = (
-        FundingAmount.objects.filter(funding=funding).aggregate(amount=Sum("amount"))
-    )
+    all_amount = FundingAmount.objects.filter(funding=funding).aggregate(amount=Sum("amount"))
     return {
         "name": funding.name,
         "contents": funding.contents,
@@ -152,3 +150,16 @@ def handle_funding_list(user_id: int):
         "my_fundings": my_fundings,
         "friends_fundings": friends_fundings,
     }
+
+
+def handle_funding_presents_list(funding_id: int):
+    funding_amounts = FundingAmount.objects.filter(funding_id=funding_id)
+    return [
+        FundingPresentsListResponseSchema(
+            name=funding_amount.to_name,
+            message=funding_amount.contents,
+            amount=funding_amount.amount,
+            image=f"{settings.S3_BASE_URL}/presents/{funding_amount.id}"
+        )
+        for funding_amount in funding_amounts
+    ]
