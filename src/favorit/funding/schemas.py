@@ -197,7 +197,7 @@ class FundingPresentsListResponse(Schema):
                     {
                         "name": "신윤권",
                         "message": "너를 향한 나의 마음이야",
-                        "ammount": "300000",
+                        "amount": "300000",
                         "image": "s3-image-link",
                     }
                 ],
