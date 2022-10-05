@@ -108,10 +108,10 @@ class PayFundingResponseSchema(Schema):
 
 class PayFundingResponseSchemaV2(Schema):
     funding_id: int
-    link_for_sharing: str
-    link_for_uploaded: str
     funding_name: str
     amount: int
+    link_for_sharing: str
+    link_for_uploaded: str
 
 
 class PayFundingResponse(Schema):
