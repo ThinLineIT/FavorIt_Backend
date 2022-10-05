@@ -95,6 +95,8 @@ def handle_pay_funding_v2(funding_id: int, request_body: PayFundingRequestBody, 
 
     return {
         "funding_id": funding.id,
+        "funding_name": funding.name,
+        "amount": request_body.amount,
         "link_for_sharing": f"{settings.BASE_URL}/funding/{funding.id}",
         "link_for_uploaded": f"{settings.S3_BASE_URL}/presents/{funding_amount.id}",
     }
