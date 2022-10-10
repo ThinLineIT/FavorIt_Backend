@@ -158,8 +158,8 @@ def handle_funding_presents_list(funding_id: int):
     funding_amounts = FundingAmount.objects.filter(funding_id=funding_id)
     return [
         FundingPresentsListResponseSchema(
-            to=funding_amount.to_name,
-            from_=funding_amount.from_name,
+            to_name=funding_amount.to_name,
+            from_name=funding_amount.from_name,
             contents=funding_amount.contents,
             amount=funding_amount.amount,
             image=f"{settings.S3_BASE_URL}/presents/{funding_amount.id}"

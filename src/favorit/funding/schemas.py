@@ -182,8 +182,8 @@ class FundingListResponse(Schema):
 
 
 class FundingPresentsListResponseSchema(Schema):
-    to: str
-    from_: str
+    to_name: str
+    from_name: str
     contents: str
     amount: int
     image: str
