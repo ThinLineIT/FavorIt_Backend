@@ -36,6 +36,8 @@ def handle_create_funding_v2(request_body: CreateFundingRequestBody, user_id, im
     s3_client.upload_file_object(image_data=image, bucket_path=detail_image_path, content_type=image.content_type)
 
     FundingImageUploadHistory.objects.create(funding=funding, image_path=detail_image_path)
+    funding.image_uploaded = True
+    funding.save()
 
     return {"funding_id": funding.id, "link_for_sharing": f"{settings.BASE_URL}/{detail_image_path}"}
 
@@ -63,7 +65,7 @@ def handle_retrieve_funding_detail(funding_id: int, user_id: int) -> dict[str, A
             "link": funding.product.link,
             "price": funding.product.price,
         },
-        "image": f"{settings.S3_BASE_URL}/funding/{funding.id}",
+        "image": f"{settings.S3_BASE_URL}/funding/{funding.id}" if funding.image_uploaded else "",
     }
 
 
@@ -103,6 +105,8 @@ def handle_pay_funding_v2(funding_id: int, request_body: PayFundingRequestBody, 
         type=FundingImageType.PRESENT,
         image_path=detail_present_image_path,
     )
+    funding_amount.image_uploaded = True
+    funding_amount.save()
 
     return {
         "funding_id": funding.id,
@@ -146,7 +150,7 @@ def handle_funding_list(user_id: int):
             funding_id=funding.id,
             name=funding.name,
             due_date=datetime.strftime(funding.due_date, settings.DEFAULT_DATE_FORMAT),
-            image=f"{settings.S3_BASE_URL}/funding/{funding.id}",
+            image=f"{settings.S3_BASE_URL}/funding/{funding.id}" if funding.image_uploaded else "",
         )
         for funding in my_all_fundings
     ]
@@ -155,7 +159,7 @@ def handle_funding_list(user_id: int):
             funding_id=visited_funding.id,
             name=visited_funding.name,
             due_date=datetime.strftime(visited_funding.due_date, settings.DEFAULT_DATE_FORMAT),
-            image=f"{settings.S3_BASE_URL}/funding/{visited_funding.id}",
+            image=f"{settings.S3_BASE_URL}/funding/{visited_funding.id}" if visited_funding.image_uploaded else "",
         )
         for visited_funding in me.visited_fundings.all()
     ]
@@ -173,7 +177,7 @@ def handle_funding_presents_list(funding_id: int):
             from_name=funding_amount.from_name,
             contents=funding_amount.contents,
             amount=funding_amount.amount,
-            image=f"{settings.S3_BASE_URL}/presents/{funding_amount.id}",
+            image=f"{settings.S3_BASE_URL}/presents/{funding_amount.id}" if funding_amount.image_uploaded else "",
         )
         for funding_amount in funding_amounts
     ]

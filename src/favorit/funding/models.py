@@ -16,6 +16,7 @@ class Funding(CommonTimestamp):
     state = models.CharField(
         max_length=100, choices=FundingState.choices, default=FundingState.OPENED, help_text="펀딩 상태"
     )
+    image_uploaded = models.BooleanField(default=False, help_text="펀딩생성 이미지 업로드 여부")
 
     @property
     def enable_closed(self) -> bool:
@@ -41,6 +42,7 @@ class FundingAmount(CommonTimestamp):
     from_name = models.CharField(max_length=20, help_text="보내는 사람 이름")
     to_name = models.CharField(max_length=20, help_text="받는 사람 이름")
     contents = models.TextField(help_text="선물하기 내용")
+    image_uploaded = models.BooleanField(default=False, help_text="선물하기 이미지 업로드 여부")
 
     def add_amount(self, amount):
         self.amount += amount
