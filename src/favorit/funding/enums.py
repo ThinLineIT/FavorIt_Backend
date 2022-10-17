@@ -30,3 +30,8 @@ class BankEnum(models.TextChoices):
             element["image"] = f"https://{settings.S3_BUCKET}.{settings.S3_BASE_URL}/bank/{bank.value.lower()}.jpg"
             result.append(element)
         return result
+
+
+class FundingImageType(models.TextChoices):
+    PRESENT = "PRESENT", "선물하기 이미지"
+    FUNDING_CREATE = "FUNDING_CREATE", "펀딩생성 이미지"

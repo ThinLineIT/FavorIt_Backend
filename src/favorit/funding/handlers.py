@@ -7,14 +7,15 @@ from django.db.models import Sum
 from ninja.errors import HttpError
 
 from favorit.favorit_user.models import FavorItUser
-from favorit.funding.enums import FundingState
-from favorit.funding.models import Funding, FundingAmount, FundingPaymentResult
+from favorit.funding.enums import FundingState, FundingImageType
+from favorit.funding.models import Funding, FundingAmount, FundingPaymentResult, FundingImageUploadHistory
 from favorit.funding.schemas import (
     CreateFundingRequestBody,
     PayFundingRequestBody,
     PaymentFundingRequest,
     VerifyBankAccountRequestBody,
-    FundingInfo, FundingPresentsListResponseSchema,
+    FundingInfo,
+    FundingPresentsListResponseSchema,
 )
 from favorit.funding.services import FundingCreator
 from favorit.integration.s3.client import S3Client
@@ -31,9 +32,12 @@ def handle_create_funding_v2(request_body: CreateFundingRequestBody, user_id, im
     funding: Funding = funding_creator.create()
 
     s3_client = S3Client()
-    s3_client.upload_file_object(image_data=image, bucket_path=f"funding/{funding.id}", content_type=image.content_type)
+    detail_image_path = f"funding/{funding.id}"
+    s3_client.upload_file_object(image_data=image, bucket_path=detail_image_path, content_type=image.content_type)
 
-    return {"funding_id": funding.id, "link_for_sharing": f"{settings.BASE_URL}/funding/{funding.id}"}
+    FundingImageUploadHistory.objects.create(funding=funding, image_path=detail_image_path)
+
+    return {"funding_id": funding.id, "link_for_sharing": f"{settings.BASE_URL}/{detail_image_path}"}
 
 
 def handle_retrieve_funding_detail(funding_id: int, user_id: int) -> dict[str, Any]:
@@ -89,8 +93,15 @@ def handle_pay_funding_v2(funding_id: int, request_body: PayFundingRequestBody, 
     )
 
     s3_client = S3Client()
+    detail_present_image_path = f"presents/{funding_amount.id}"
     s3_client.upload_file_object(
-        image_data=image, bucket_path=f"presents/{funding_amount.id}", content_type=image.content_type
+        image_data=image, bucket_path=detail_present_image_path, content_type=image.content_type
+    )
+    FundingImageUploadHistory.objects.create(
+        funding=funding,
+        funding_amount=funding_amount,
+        type=FundingImageType.PRESENT,
+        image_path=detail_present_image_path,
     )
 
     return {
@@ -98,7 +109,7 @@ def handle_pay_funding_v2(funding_id: int, request_body: PayFundingRequestBody, 
         "funding_name": funding.name,
         "amount": request_body.amount,
         "link_for_sharing": f"{settings.BASE_URL}/funding/{funding.id}",
-        "link_for_uploaded": f"{settings.S3_BASE_URL}/presents/{funding_amount.id}",
+        "link_for_uploaded": f"{settings.S3_BASE_URL}/{detail_present_image_path}",
     }
 
 
@@ -162,7 +173,7 @@ def handle_funding_presents_list(funding_id: int):
             from_name=funding_amount.from_name,
             contents=funding_amount.contents,
             amount=funding_amount.amount,
-            image=f"{settings.S3_BASE_URL}/presents/{funding_amount.id}"
+            image=f"{settings.S3_BASE_URL}/presents/{funding_amount.id}",
         )
         for funding_amount in funding_amounts
     ]

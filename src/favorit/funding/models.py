@@ -4,7 +4,7 @@ from django.conf import settings
 from django.db import models
 
 from favorit.common.models import CommonTimestamp
-from favorit.funding.enums import BankEnum, FundingState
+from favorit.funding.enums import BankEnum, FundingState, FundingImageType
 
 
 class Funding(CommonTimestamp):
@@ -62,3 +62,10 @@ class FundingPaymentResult(CommonTimestamp):
     bank_code = models.CharField(max_length=10, choices=BankEnum.choices, help_text="은행")
     account_number = models.CharField(max_length=30, help_text="계좌 번호")
     price = models.IntegerField(help_text="정산 받은 금액")
+
+
+class FundingImageUploadHistory(CommonTimestamp):
+    funding = models.ForeignKey("Funding", on_delete=models.DO_NOTHING, help_text="펀딩 ID")
+    funding_amount = models.ForeignKey("FundingAmount", null=True, on_delete=models.DO_NOTHING, help_text="펀딩 모금 양 ID")
+    type = models.CharField(max_length=30, choices=FundingImageType.choices, default=FundingImageType.FUNDING_CREATE, help_text="이미지 타입")
+    image_path = models.CharField(max_length=300, help_text="이미지 s3 path")
