@@ -55,6 +55,7 @@ class FundingDetailResponseSchema(Schema):
     due_date: date
     progress_percent: int
     link_for_sharing: str
+    image: str
     product: Product
 
 
@@ -77,6 +78,7 @@ class RetrievingFundingDetailResponse(Schema):
                         "link": "https://www.apple.com/kr/shop/buy-ipad/ipad-air",
                         "price": 779000,
                     },
+                    "image": "s3-image-link",
                 },
                 "message": "",
             }
