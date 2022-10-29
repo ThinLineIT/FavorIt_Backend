@@ -27,7 +27,7 @@ class BankEnum(models.TextChoices):
             element = {}
             element["text"] = bank.label
             element["value"] = bank.value
-            element["image"] = f"https://{settings.S3_BUCKET}.{settings.S3_BASE_URL}/bank/{bank.value.lower()}.jpg"
+            element["image"] = f"{settings.S3_BASE_URL}/bank/{bank.value.lower()}.jpg"
             result.append(element)
         return result
 
